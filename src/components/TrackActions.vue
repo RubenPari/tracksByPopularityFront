@@ -9,7 +9,7 @@
       <ActionButton
         :loading="loading"
         :disabled="loading"
-        @click="handleAction(trackApiService.addTracksLess, 'Tracce aggiunte alla playlist (popolarità bassa)')"
+        @click="addTracksLess"
       >
         <template #icon>📉</template>
         <template #title>Popolarità Bassa</template>
@@ -19,7 +19,7 @@
       <ActionButton
         :loading="loading"
         :disabled="loading"
-        @click="handleAction(trackApiService.addTracksLessMedium, 'Tracce aggiunte alla playlist (popolarità medio-bassa)')"
+        @click="addTracksLessMedium"
       >
         <template #icon>📊</template>
         <template #title>Popolarità Medio-Bassa</template>
@@ -29,7 +29,7 @@
       <ActionButton
         :loading="loading"
         :disabled="loading"
-        @click="handleAction(trackApiService.addTracksMedium, 'Tracce aggiunte alla playlist (popolarità media)')"
+        @click="addTracksMedium"
       >
         <template #icon>📈</template>
         <template #title>Popolarità Media</template>
@@ -39,7 +39,7 @@
       <ActionButton
         :loading="loading"
         :disabled="loading"
-        @click="handleAction(trackApiService.addTracksMoreMedium, 'Tracce aggiunte alla playlist (popolarità medio-alta)')"
+        @click="addTracksMoreMedium"
       >
         <template #icon>🔥</template>
         <template #title>Popolarità Medio-Alta</template>
@@ -49,7 +49,7 @@
       <ActionButton
         :loading="loading"
         :disabled="loading"
-        @click="handleAction(trackApiService.addTracksMore, 'Tracce aggiunte alla playlist (popolarità alta)')"
+        @click="addTracksMore"
       >
         <template #icon>⭐</template>
         <template #title>Popolarità Alta</template>
@@ -60,21 +60,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useApiStore } from '@/stores/api'
-import { trackApiService } from '@/services/trackApi'
-import type { ApiResponse } from '@/types/api'
+import { useTrackActions } from '@/composables/useTrackActions'
 import ActionButton from './ActionButton.vue'
 
-const apiStore = useApiStore()
-const loading = computed(() => apiStore.loading)
-
-const handleAction = async (
-  apiCall: () => Promise<ApiResponse<unknown>>,
-  successMessage: string
-) => {
-  await apiStore.executeApiCall(apiCall, successMessage)
-}
+const { addTracksLess, addTracksLessMedium, addTracksMedium, addTracksMoreMedium, addTracksMore, loading } = useTrackActions()
 </script>
 
 <style scoped>
