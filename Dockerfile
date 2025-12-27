@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm ci --only=production=false
 
 # Copy source code
 COPY . .
@@ -22,6 +22,9 @@ RUN npm run build
 # Stage 2: Production
 FROM nginx:alpine AS final
 
+# Install curl for health checks
+RUN apk add --no-cache curl
+
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
@@ -33,7 +36,7 @@ EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+  CMD curl -f http://localhost/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
