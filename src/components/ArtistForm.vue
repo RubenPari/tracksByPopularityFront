@@ -39,19 +39,19 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useApiStore } from '@/stores/api'
-import { trackApiService } from '@/services/trackApi'
+import { useTrackActions } from '@/composables/useTrackActions'
 import { useFormValidation } from '@/composables/useFormValidation'
 
 const apiStore = useApiStore()
+const { addTracksByArtist, loading } = useTrackActions()
 const { validateArtistId, getSpotifyIdErrorMessage } = useFormValidation()
 
 const artistId = ref('')
-const loading = computed(() => apiStore.loading)
 const hasError = ref(false)
 
 const handleSubmit = async () => {
   const trimmedId = artistId.value.trim()
-  
+
   if (!trimmedId) {
     hasError.value = true
     return
@@ -65,10 +65,7 @@ const handleSubmit = async () => {
 
   hasError.value = false
 
-  await apiStore.executeApiCall(
-    () => trackApiService.addTracksByArtist(trimmedId),
-    'Tracce dell\'artista aggiunte alle playlist'
-  )
+  await addTracksByArtist(trimmedId)
 
   if (apiStore.success) {
     artistId.value = ''
