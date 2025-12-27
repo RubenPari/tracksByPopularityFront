@@ -9,7 +9,7 @@
       <ActionButton
         :loading="loading"
         :disabled="loading"
-        @click="handleAction(playlistApiService.createPlaylistTrackMinor, 'Playlist creata con successo')"
+        @click="createPlaylistTrackMinor"
       >
         <template #icon>🎵</template>
         <template #title>Crea Playlist Tracce Minori</template>
@@ -20,21 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useApiStore } from '@/stores/api'
-import { playlistApiService } from '@/services/playlistApi'
-import type { ApiResponse } from '@/types/api'
+import { usePlaylistActions } from '@/composables/usePlaylistActions'
 import ActionButton from './ActionButton.vue'
 
-const apiStore = useApiStore()
-const loading = computed(() => apiStore.loading)
-
-const handleAction = async (
-  apiCall: () => Promise<ApiResponse<unknown>>,
-  successMessage: string
-) => {
-  await apiStore.executeApiCall(apiCall, successMessage)
-}
+const { createPlaylistTrackMinor, loading } = usePlaylistActions()
 </script>
 
 <style scoped>
