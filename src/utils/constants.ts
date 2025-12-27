@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
     ARTIST: '/track/artist',
   },
   PLAYLIST: {
+    ALL: '/playlist/all',
     CREATE_MINOR: '/playlist/create-playlist-track-minor',
   },
   AUTH: {

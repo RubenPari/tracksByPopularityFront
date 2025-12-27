@@ -62,3 +62,21 @@ export interface DetailedHealthResponse {
   }
 }
 
+/**
+ * Playlist information from Spotify
+ */
+export interface PlaylistInfo {
+  id: string
+  name: string
+  description?: string
+  totalTracks: number
+  uri?: string
+}
+
+/**
+ * Request to add tracks by popularity
+ */
+export interface AddTracksByPopularityRequest {
+  playlistId: string
+}
+

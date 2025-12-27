@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient'
-import type { ApiResponse, PlaylistResponse } from '@/types/api'
+import type { ApiResponse, PlaylistResponse, PlaylistInfo } from '@/types/api'
 import { API_ENDPOINTS } from '@/utils/constants'
 
 /**
@@ -7,6 +7,13 @@ import { API_ENDPOINTS } from '@/utils/constants'
  * Provides methods to interact with playlist endpoints
  */
 export class PlaylistApiService {
+  /**
+   * Retrieves all playlists owned by the current user
+   */
+  async getAllPlaylists(): Promise<ApiResponse<PlaylistInfo[]>> {
+    return httpClient.get<PlaylistInfo[]>(API_ENDPOINTS.PLAYLIST.ALL)
+  }
+
   /**
    * Creates a playlist with tracks from artists that have 5 or fewer songs
    */

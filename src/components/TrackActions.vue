@@ -2,14 +2,53 @@
   <div class="track-actions">
     <h2 class="section-title">Gestione Tracce per Popolarità</h2>
     <p class="section-description">
-      Aggiungi le tue tracce alle playlist in base alla loro popolarità su Spotify
+      Aggiungi le tue tracce alle playlist in base alla loro popolarità su Spotify.
+      Seleziona una playlist per ogni categoria di popolarità.
     </p>
+
+    <div class="playlist-selection-section">
+      <PlaylistSelector
+        v-model="selectedPlaylistLess"
+        label="Playlist per Popolarità Bassa"
+        placeholder="Seleziona playlist per popolarità bassa..."
+        :required="true"
+        :show-refresh="true"
+      />
+      <PlaylistSelector
+        v-model="selectedPlaylistLessMedium"
+        label="Playlist per Popolarità Medio-Bassa"
+        placeholder="Seleziona playlist per popolarità medio-bassa..."
+        :required="true"
+        :show-refresh="false"
+      />
+      <PlaylistSelector
+        v-model="selectedPlaylistMedium"
+        label="Playlist per Popolarità Media"
+        placeholder="Seleziona playlist per popolarità media..."
+        :required="true"
+        :show-refresh="false"
+      />
+      <PlaylistSelector
+        v-model="selectedPlaylistMoreMedium"
+        label="Playlist per Popolarità Medio-Alta"
+        placeholder="Seleziona playlist per popolarità medio-alta..."
+        :required="true"
+        :show-refresh="false"
+      />
+      <PlaylistSelector
+        v-model="selectedPlaylistMore"
+        label="Playlist per Popolarità Alta"
+        placeholder="Seleziona playlist per popolarità alta..."
+        :required="true"
+        :show-refresh="false"
+      />
+    </div>
 
     <div class="actions-grid">
       <ActionButton
         :loading="loading"
-        :disabled="loading"
-        @click="addTracksLess"
+        :disabled="loading || !selectedPlaylistLess"
+        @click="handleAddTracksLess"
       >
         <template #icon>📉</template>
         <template #title>Popolarità Bassa</template>
@@ -18,8 +57,8 @@
 
       <ActionButton
         :loading="loading"
-        :disabled="loading"
-        @click="addTracksLessMedium"
+        :disabled="loading || !selectedPlaylistLessMedium"
+        @click="handleAddTracksLessMedium"
       >
         <template #icon>📊</template>
         <template #title>Popolarità Medio-Bassa</template>
@@ -28,8 +67,8 @@
 
       <ActionButton
         :loading="loading"
-        :disabled="loading"
-        @click="addTracksMedium"
+        :disabled="loading || !selectedPlaylistMedium"
+        @click="handleAddTracksMedium"
       >
         <template #icon>📈</template>
         <template #title>Popolarità Media</template>
@@ -38,8 +77,8 @@
 
       <ActionButton
         :loading="loading"
-        :disabled="loading"
-        @click="addTracksMoreMedium"
+        :disabled="loading || !selectedPlaylistMoreMedium"
+        @click="handleAddTracksMoreMedium"
       >
         <template #icon>🔥</template>
         <template #title>Popolarità Medio-Alta</template>
@@ -48,8 +87,8 @@
 
       <ActionButton
         :loading="loading"
-        :disabled="loading"
-        @click="addTracksMore"
+        :disabled="loading || !selectedPlaylistMore"
+        @click="handleAddTracksMore"
       >
         <template #icon>⭐</template>
         <template #title>Popolarità Alta</template>
@@ -60,10 +99,60 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useTrackActions } from '@/composables/useTrackActions'
+import { useApiStore } from '@/stores/api'
 import ActionButton from './ActionButton.vue'
+import PlaylistSelector from './PlaylistSelector.vue'
 
 const { addTracksLess, addTracksLessMedium, addTracksMedium, addTracksMoreMedium, addTracksMore, loading } = useTrackActions()
+const apiStore = useApiStore()
+
+const selectedPlaylistLess = ref('')
+const selectedPlaylistLessMedium = ref('')
+const selectedPlaylistMedium = ref('')
+const selectedPlaylistMoreMedium = ref('')
+const selectedPlaylistMore = ref('')
+
+const handleAddTracksLess = async () => {
+  if (!selectedPlaylistLess.value) {
+    apiStore.error = 'Seleziona una playlist per popolarità bassa'
+    return
+  }
+  await addTracksLess(selectedPlaylistLess.value)
+}
+
+const handleAddTracksLessMedium = async () => {
+  if (!selectedPlaylistLessMedium.value) {
+    apiStore.error = 'Seleziona una playlist per popolarità medio-bassa'
+    return
+  }
+  await addTracksLessMedium(selectedPlaylistLessMedium.value)
+}
+
+const handleAddTracksMedium = async () => {
+  if (!selectedPlaylistMedium.value) {
+    apiStore.error = 'Seleziona una playlist per popolarità media'
+    return
+  }
+  await addTracksMedium(selectedPlaylistMedium.value)
+}
+
+const handleAddTracksMoreMedium = async () => {
+  if (!selectedPlaylistMoreMedium.value) {
+    apiStore.error = 'Seleziona una playlist per popolarità medio-alta'
+    return
+  }
+  await addTracksMoreMedium(selectedPlaylistMoreMedium.value)
+}
+
+const handleAddTracksMore = async () => {
+  if (!selectedPlaylistMore.value) {
+    apiStore.error = 'Seleziona una playlist per popolarità alta'
+    return
+  }
+  await addTracksMore(selectedPlaylistMore.value)
+}
 </script>
 
 <style scoped>
@@ -84,6 +173,17 @@ const { addTracksLess, addTracksLessMedium, addTracksMedium, addTracksMoreMedium
   margin-bottom: 2rem;
 }
 
+.playlist-selection-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--color-background-soft);
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+}
+
 .actions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -93,6 +193,10 @@ const { addTracksLess, addTracksLessMedium, addTracksMedium, addTracksMoreMedium
 @media (max-width: 768px) {
   .actions-grid {
     grid-template-columns: 1fr;
+  }
+
+  .playlist-selection-section {
+    padding: 1rem;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient'
-import type { ApiResponse, TrackResponse } from '@/types/api'
+import type { ApiResponse, TrackResponse, AddTracksByPopularityRequest } from '@/types/api'
 import { API_ENDPOINTS } from '@/utils/constants'
 
 /**
@@ -9,37 +9,42 @@ import { API_ENDPOINTS } from '@/utils/constants'
 export class TrackApiService {
   /**
    * Adds tracks with low popularity to playlist
+   * @param playlistId - The Spotify playlist ID to add tracks to
    */
-  async addTracksLess(): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.LESS)
+  async addTracksLess(playlistId: string): Promise<ApiResponse<TrackResponse>> {
+    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.LESS, { playlistId } as AddTracksByPopularityRequest)
   }
 
   /**
    * Adds tracks with low-medium popularity to playlist
+   * @param playlistId - The Spotify playlist ID to add tracks to
    */
-  async addTracksLessMedium(): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.LESS_MEDIUM)
+  async addTracksLessMedium(playlistId: string): Promise<ApiResponse<TrackResponse>> {
+    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.LESS_MEDIUM, { playlistId } as AddTracksByPopularityRequest)
   }
 
   /**
    * Adds tracks with medium popularity to playlist
+   * @param playlistId - The Spotify playlist ID to add tracks to
    */
-  async addTracksMedium(): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MEDIUM)
+  async addTracksMedium(playlistId: string): Promise<ApiResponse<TrackResponse>> {
+    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MEDIUM, { playlistId } as AddTracksByPopularityRequest)
   }
 
   /**
    * Adds tracks with medium-high popularity to playlist
+   * @param playlistId - The Spotify playlist ID to add tracks to
    */
-  async addTracksMoreMedium(): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MORE_MEDIUM)
+  async addTracksMoreMedium(playlistId: string): Promise<ApiResponse<TrackResponse>> {
+    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MORE_MEDIUM, { playlistId } as AddTracksByPopularityRequest)
   }
 
   /**
    * Adds tracks with high popularity to playlist
+   * @param playlistId - The Spotify playlist ID to add tracks to
    */
-  async addTracksMore(): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MORE)
+  async addTracksMore(playlistId: string): Promise<ApiResponse<TrackResponse>> {
+    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MORE, { playlistId } as AddTracksByPopularityRequest)
   }
 
   /**

@@ -24,60 +24,65 @@ export function useTrackActions() {
 
   /**
    * Adds tracks with low popularity (≤20) to the designated playlist.
+   * @param playlistId - The Spotify playlist ID to add tracks to
    * @returns A promise that resolves with the API call result.
    */
-  const addTracksLess = async () => {
-    logger.info('Adding tracks with low popularity')
+  const addTracksLess = async (playlistId: string) => {
+    logger.info('Adding tracks with low popularity', { playlistId })
     return apiStore.executeApiCall(
-      trackApiService.addTracksLess,
+      () => trackApiService.addTracksLess(playlistId),
       SUCCESS_MESSAGES.TRACKS_ADDED_LESS
     )
   }
 
   /**
    * Adds tracks with low-medium popularity (21-40) to the designated playlist.
+   * @param playlistId - The Spotify playlist ID to add tracks to
    * @returns A promise that resolves with the API call result.
    */
-  const addTracksLessMedium = async () => {
-    logger.info('Adding tracks with low-medium popularity')
+  const addTracksLessMedium = async (playlistId: string) => {
+    logger.info('Adding tracks with low-medium popularity', { playlistId })
     return apiStore.executeApiCall(
-      trackApiService.addTracksLessMedium,
+      () => trackApiService.addTracksLessMedium(playlistId),
       SUCCESS_MESSAGES.TRACKS_ADDED_LESS_MEDIUM
     )
   }
 
   /**
    * Adds tracks with medium popularity (41-60) to the designated playlist.
+   * @param playlistId - The Spotify playlist ID to add tracks to
    * @returns A promise that resolves with the API call result.
    */
-  const addTracksMedium = async () => {
-    logger.info('Adding tracks with medium popularity')
+  const addTracksMedium = async (playlistId: string) => {
+    logger.info('Adding tracks with medium popularity', { playlistId })
     return apiStore.executeApiCall(
-      trackApiService.addTracksMedium,
+      () => trackApiService.addTracksMedium(playlistId),
       SUCCESS_MESSAGES.TRACKS_ADDED_MEDIUM
     )
   }
 
   /**
    * Adds tracks with medium-high popularity (41-80) to the designated playlist.
+   * @param playlistId - The Spotify playlist ID to add tracks to
    * @returns A promise that resolves with the API call result.
    */
-  const addTracksMoreMedium = async () => {
-    logger.info('Adding tracks with medium-high popularity')
+  const addTracksMoreMedium = async (playlistId: string) => {
+    logger.info('Adding tracks with medium-high popularity', { playlistId })
     return apiStore.executeApiCall(
-      trackApiService.addTracksMoreMedium,
+      () => trackApiService.addTracksMoreMedium(playlistId),
       SUCCESS_MESSAGES.TRACKS_ADDED_MORE_MEDIUM
     )
   }
 
   /**
    * Adds tracks with high popularity (>80) to the designated playlist.
+   * @param playlistId - The Spotify playlist ID to add tracks to
    * @returns A promise that resolves with the API call result.
    */
-  const addTracksMore = async () => {
-    logger.info('Adding tracks with high popularity')
+  const addTracksMore = async (playlistId: string) => {
+    logger.info('Adding tracks with high popularity', { playlistId })
     return apiStore.executeApiCall(
-      trackApiService.addTracksMore,
+      () => trackApiService.addTracksMore(playlistId),
       SUCCESS_MESSAGES.TRACKS_ADDED_MORE
     )
   }
