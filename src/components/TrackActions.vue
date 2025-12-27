@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useTrackActions } from '@/composables/useTrackActions'
 import { useApiStore } from '@/stores/api'
 import ActionButton from './ActionButton.vue'
@@ -108,11 +108,45 @@ import PlaylistSelector from './PlaylistSelector.vue'
 const { addTracksLess, addTracksLessMedium, addTracksMedium, addTracksMoreMedium, addTracksMore, loading } = useTrackActions()
 const apiStore = useApiStore()
 
+const STORAGE_KEYS = {
+  PLAYLIST_LESS: 'selectedPlaylistLess',
+  PLAYLIST_LESS_MEDIUM: 'selectedPlaylistLessMedium',
+  PLAYLIST_MEDIUM: 'selectedPlaylistMedium',
+  PLAYLIST_MORE_MEDIUM: 'selectedPlaylistMoreMedium',
+  PLAYLIST_MORE: 'selectedPlaylistMore',
+} as const
+
 const selectedPlaylistLess = ref('')
 const selectedPlaylistLessMedium = ref('')
 const selectedPlaylistMedium = ref('')
 const selectedPlaylistMoreMedium = ref('')
 const selectedPlaylistMore = ref('')
+
+// Load saved selections from localStorage
+onMounted(() => {
+  selectedPlaylistLess.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_LESS) || ''
+  selectedPlaylistLessMedium.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_LESS_MEDIUM) || ''
+  selectedPlaylistMedium.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_MEDIUM) || ''
+  selectedPlaylistMoreMedium.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_MORE_MEDIUM) || ''
+  selectedPlaylistMore.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_MORE) || ''
+})
+
+// Save selections to localStorage when they change
+watch(selectedPlaylistLess, (value) => {
+  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_LESS, value)
+})
+watch(selectedPlaylistLessMedium, (value) => {
+  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_LESS_MEDIUM, value)
+})
+watch(selectedPlaylistMedium, (value) => {
+  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_MEDIUM, value)
+})
+watch(selectedPlaylistMoreMedium, (value) => {
+  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_MORE_MEDIUM, value)
+})
+watch(selectedPlaylistMore, (value) => {
+  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_MORE, value)
+})
 
 const handleAddTracksLess = async () => {
   if (!selectedPlaylistLess.value) {
