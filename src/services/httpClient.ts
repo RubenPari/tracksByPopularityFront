@@ -1,40 +1,44 @@
 import type { ApiResponse } from '@/types/api'
+import { getApiUrl } from '@/config/env'
+import { HTTP_STATUS, ERROR_MESSAGES } from '@/utils/constants'
+import { createLogger } from '@/utils/logger'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
+const logger = createLogger('HttpClient')
 
 /**
  * HTTP status code to error message mapping
  */
 const getErrorMessage = (status: number, data: string): string => {
   switch (status) {
-    case 401:
-      return 'Non autorizzato. Verifica le credenziali Spotify.'
-    case 400:
+    case HTTP_STATUS.UNAUTHORIZED:
+      return ERROR_MESSAGES.UNAUTHORIZED
+    case HTTP_STATUS.BAD_REQUEST:
       try {
         const errorData = JSON.parse(data)
-        return errorData.error || errorData.message || 'Richiesta non valida'
+        return errorData.error || errorData.message || ERROR_MESSAGES.BAD_REQUEST
       } catch {
-        return data || 'Richiesta non valida'
+        return data || ERROR_MESSAGES.BAD_REQUEST
       }
-    case 404:
-      return 'Risorsa non trovata'
-    case 500:
-    case 502:
-    case 503:
-      return 'Errore del server. Riprova più tardi.'
+    case HTTP_STATUS.NOT_FOUND:
+      return ERROR_MESSAGES.NOT_FOUND
+    case HTTP_STATUS.INTERNAL_SERVER_ERROR:
+    case HTTP_STATUS.BAD_GATEWAY:
+    case HTTP_STATUS.SERVICE_UNAVAILABLE:
+      return ERROR_MESSAGES.SERVER_ERROR
     default:
-      return `Errore ${status}: ${data || 'Errore sconosciuto'}`
+      return `Errore ${status}: ${data || ERROR_MESSAGES.UNKNOWN_ERROR}`
   }
 }
 
 /**
  * Base HTTP client for making API requests
+ * Provides typed API calls with error handling and logging
  */
 export class HttpClient {
   private baseUrl: string
 
-  constructor(baseUrl: string = API_BASE_URL) {
-    this.baseUrl = baseUrl
+  constructor(baseUrl?: string) {
+    this.baseUrl = baseUrl || getApiUrl('')
   }
 
   /**
@@ -44,8 +48,13 @@ export class HttpClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
+    const url = `${this.baseUrl}${endpoint}`
+    const method = options.method || 'GET'
+    
+    logger.debug(`Making ${method} request to ${url}`, { options })
+
     try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      const response = await fetch(url, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
@@ -57,6 +66,10 @@ export class HttpClient {
 
       if (!response.ok) {
         const errorMessage = getErrorMessage(response.status, data)
+        logger.warn(`Request failed: ${method} ${url}`, {
+          status: response.status,
+          error: errorMessage,
+        })
         
         try {
           const errorData = JSON.parse(data)
@@ -77,6 +90,7 @@ export class HttpClient {
       // Try to parse JSON response
       try {
         const jsonData = JSON.parse(data)
+        logger.debug(`Request successful: ${method} ${url}`, { data: jsonData })
         return {
           success: true,
           data: jsonData as T,
@@ -84,6 +98,7 @@ export class HttpClient {
         }
       } catch {
         // If not JSON, return as string message
+        logger.debug(`Request successful (non-JSON): ${method} ${url}`)
         return {
           success: true,
           data: data as T,
@@ -91,13 +106,15 @@ export class HttpClient {
         }
       }
     } catch (error) {
-      let errorMessage = 'Errore di connessione'
+      let errorMessage: string = ERROR_MESSAGES.CONNECTION_ERROR
       
       if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-        errorMessage = `Impossibile connettersi al backend. Assicurati che il server ASP.NET sia in esecuzione su ${this.baseUrl}`
+        errorMessage = `${ERROR_MESSAGES.CONNECTION_ERROR} (${this.baseUrl})`
       } else if (error instanceof Error) {
         errorMessage = error.message
       }
+      
+      logger.error(`Request error: ${method} ${url}`, error)
       
       return {
         success: false,

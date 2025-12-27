@@ -1,5 +1,8 @@
+import { VALIDATION } from '@/utils/constants'
+
 /**
  * Composable for form validation utilities
+ * Provides reusable validation functions for forms
  */
 export function useFormValidation() {
   /**
@@ -10,8 +13,10 @@ export function useFormValidation() {
     if (!id || typeof id !== 'string') {
       return false
     }
-    const spotifyIdRegex = /^[a-zA-Z0-9]{22}$/
-    return spotifyIdRegex.test(id.trim())
+    return (
+      id.trim().length === VALIDATION.SPOTIFY_ID_LENGTH &&
+      VALIDATION.SPOTIFY_ID_PATTERN.test(id.trim())
+    )
   }
 
   /**
@@ -25,7 +30,7 @@ export function useFormValidation() {
    * Gets validation error message for Spotify ID
    */
   const getSpotifyIdErrorMessage = (): string => {
-    return 'ID non valido. Deve essere esattamente 22 caratteri alfanumerici.'
+    return `ID non valido. Deve essere esattamente ${VALIDATION.SPOTIFY_ID_LENGTH} caratteri alfanumerici.`
   }
 
   return {

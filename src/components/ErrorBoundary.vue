@@ -12,9 +12,35 @@
 <script setup lang="ts">
 import { ref, onErrorCaptured } from 'vue'
 
+/**
+ * ErrorBoundary Component
+ *
+ * A Vue component that acts as an error boundary, catching unhandled errors
+ * from child components and displaying a user-friendly error message.
+ * This prevents the entire application from crashing when an error occurs.
+ *
+ * @component
+ * @example
+ * ```vue
+ * <ErrorBoundary>
+ *   <YourComponent />
+ * </ErrorBoundary>
+ * ```
+ */
+
+/** Reactive state indicating if an error has been caught */
 const hasError = ref(false)
+
+/** Reactive state containing the error message to display */
 const errorMessage = ref<string>('')
 
+/**
+ * Error handler that catches errors from child components.
+ * This is Vue's equivalent of React's Error Boundary.
+ *
+ * @param err - The error that was caught (can be any type)
+ * @returns {boolean} Returns false to prevent the error from propagating further
+ */
 onErrorCaptured((err: unknown) => {
   hasError.value = true
   errorMessage.value = err instanceof Error ? err.message : 'Si è verificato un errore imprevisto'
@@ -26,6 +52,10 @@ onErrorCaptured((err: unknown) => {
   return false
 })
 
+/**
+ * Resets the error state, allowing the component to try rendering again.
+ * This is called when the user clicks the "Riprova" (Retry) button.
+ */
 const resetError = () => {
   hasError.value = false
   errorMessage.value = ''

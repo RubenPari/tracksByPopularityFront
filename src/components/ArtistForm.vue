@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useApiStore } from '@/stores/api'
 import { useTrackActions } from '@/composables/useTrackActions'
 import { useFormValidation } from '@/composables/useFormValidation'
