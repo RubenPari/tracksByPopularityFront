@@ -7,11 +7,7 @@
  */
 export const API_ENDPOINTS = {
   TRACK: {
-    LESS: '/track/less',
-    LESS_MEDIUM: '/track/less-medium',
-    MEDIUM: '/track/medium',
-    MORE_MEDIUM: '/track/more-medium',
-    MORE: '/track/more',
+    BASE: '/track',
     ARTIST: '/track/artist',
   },
   PLAYLIST: {

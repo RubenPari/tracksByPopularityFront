@@ -8,184 +8,141 @@
 
     <div class="playlist-selection-section">
       <PlaylistSelector
-        v-model="selectedPlaylistLess"
-        label="Playlist per Popolarità Bassa"
-        placeholder="Seleziona playlist per popolarità bassa..."
+        v-for="config in popularityConfigs"
+        :key="config.id"
+        v-model="selections[config.id]"
+        :label="config.label"
+        :placeholder="config.placeholder"
         :required="true"
-        :show-refresh="true"
-      />
-      <PlaylistSelector
-        v-model="selectedPlaylistLessMedium"
-        label="Playlist per Popolarità Medio-Bassa"
-        placeholder="Seleziona playlist per popolarità medio-bassa..."
-        :required="true"
-        :show-refresh="false"
-      />
-      <PlaylistSelector
-        v-model="selectedPlaylistMedium"
-        label="Playlist per Popolarità Media"
-        placeholder="Seleziona playlist per popolarità media..."
-        :required="true"
-        :show-refresh="false"
-      />
-      <PlaylistSelector
-        v-model="selectedPlaylistMoreMedium"
-        label="Playlist per Popolarità Medio-Alta"
-        placeholder="Seleziona playlist per popolarità medio-alta..."
-        :required="true"
-        :show-refresh="false"
-      />
-      <PlaylistSelector
-        v-model="selectedPlaylistMore"
-        label="Playlist per Popolarità Alta"
-        placeholder="Seleziona playlist per popolarità alta..."
-        :required="true"
-        :show-refresh="false"
+        :show-refresh="config.id === 'less'"
       />
     </div>
 
     <div class="actions-grid">
       <ActionButton
+        v-for="config in popularityConfigs"
+        :key="config.id"
         :loading="loading"
-        :disabled="loading || !selectedPlaylistLess"
-        @click="handleAddTracksLess"
+        :disabled="loading || !selections[config.id]"
+        @click="handleAddTracks(config.id)"
       >
-        <template #icon>📉</template>
-        <template #title>Popolarità Bassa</template>
-        <template #description>Aggiungi tracce con popolarità bassa</template>
-      </ActionButton>
-
-      <ActionButton
-        :loading="loading"
-        :disabled="loading || !selectedPlaylistLessMedium"
-        @click="handleAddTracksLessMedium"
-      >
-        <template #icon>📊</template>
-        <template #title>Popolarità Medio-Bassa</template>
-        <template #description>Aggiungi tracce con popolarità medio-bassa</template>
-      </ActionButton>
-
-      <ActionButton
-        :loading="loading"
-        :disabled="loading || !selectedPlaylistMedium"
-        @click="handleAddTracksMedium"
-      >
-        <template #icon>📈</template>
-        <template #title>Popolarità Media</template>
-        <template #description>Aggiungi tracce con popolarità media</template>
-      </ActionButton>
-
-      <ActionButton
-        :loading="loading"
-        :disabled="loading || !selectedPlaylistMoreMedium"
-        @click="handleAddTracksMoreMedium"
-      >
-        <template #icon>🔥</template>
-        <template #title>Popolarità Medio-Alta</template>
-        <template #description>Aggiungi tracce con popolarità medio-alta</template>
-      </ActionButton>
-
-      <ActionButton
-        :loading="loading"
-        :disabled="loading || !selectedPlaylistMore"
-        @click="handleAddTracksMore"
-      >
-        <template #icon>⭐</template>
-        <template #title>Popolarità Alta</template>
-        <template #description>Aggiungi tracce con popolarità alta</template>
+        <template #icon>{{ config.icon }}</template>
+        <template #title>{{ config.title }}</template>
+        <template #description>{{ config.description }}</template>
       </ActionButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useTrackActions } from '@/composables/useTrackActions'
 import { useApiStore } from '@/stores/api'
+import { SUCCESS_MESSAGES } from '@/utils/constants'
 import ActionButton from './ActionButton.vue'
 import PlaylistSelector from './PlaylistSelector.vue'
 
-const { addTracksLess, addTracksLessMedium, addTracksMedium, addTracksMoreMedium, addTracksMore, loading } = useTrackActions()
+const { addTracksByPopularity, loading } = useTrackActions()
 const apiStore = useApiStore()
 
-const STORAGE_KEYS = {
-  PLAYLIST_LESS: 'selectedPlaylistLess',
-  PLAYLIST_LESS_MEDIUM: 'selectedPlaylistLessMedium',
-  PLAYLIST_MEDIUM: 'selectedPlaylistMedium',
-  PLAYLIST_MORE_MEDIUM: 'selectedPlaylistMoreMedium',
-  PLAYLIST_MORE: 'selectedPlaylistMore',
-} as const
+type PopularityCategoryId = 'less' | 'less-medium' | 'medium' | 'more-medium' | 'more'
 
-const selectedPlaylistLess = ref('')
-const selectedPlaylistLessMedium = ref('')
-const selectedPlaylistMedium = ref('')
-const selectedPlaylistMoreMedium = ref('')
-const selectedPlaylistMore = ref('')
+interface PopularityConfig {
+  id: PopularityCategoryId
+  label: string
+  placeholder: string
+  icon: string
+  title: string
+  description: string
+  successMessage: string
+}
 
-// Load saved selections from localStorage
+const popularityConfigs: PopularityConfig[] = [
+  {
+    id: 'less',
+    label: 'Playlist per Popolarità Bassa',
+    placeholder: 'Seleziona playlist per popolarità bassa...',
+    icon: '📉',
+    title: 'Popolarità Bassa',
+    description: 'Aggiungi tracce con popolarità bassa (0-20)',
+    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_LESS
+  },
+  {
+    id: 'less-medium',
+    label: 'Playlist per Popolarità Medio-Bassa',
+    placeholder: 'Seleziona playlist per popolarità medio-bassa...',
+    icon: '📊',
+    title: 'Popolarità Medio-Bassa',
+    description: 'Aggiungi tracce con popolarità medio-bassa (21-40)',
+    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_LESS_MEDIUM
+  },
+  {
+    id: 'medium',
+    label: 'Playlist per Popolarità Media',
+    placeholder: 'Seleziona playlist per popolarità media...',
+    icon: '📈',
+    title: 'Popolarità Media',
+    description: 'Aggiungi tracce con popolarità media (41-60)',
+    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_MEDIUM
+  },
+  {
+    id: 'more-medium',
+    label: 'Playlist per Popolarità Medio-Alta',
+    placeholder: 'Seleziona playlist per popolarità medio-alta...',
+    icon: '🔥',
+    title: 'Popolarità Medio-Alta',
+    description: 'Aggiungi tracce con popolarità medio-alta (61-80)',
+    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_MORE_MEDIUM
+  },
+  {
+    id: 'more',
+    label: 'Playlist per Popolarità Alta',
+    placeholder: 'Seleziona playlist per popolarità alta...',
+    icon: '⭐',
+    title: 'Popolarità Alta',
+    description: 'Aggiungi tracce con popolarità alta (81-100)',
+    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_MORE
+  }
+]
+
+// Centralized state for selections
+const selections = ref<Record<PopularityCategoryId, string>>({
+  'less': '',
+  'less-medium': '',
+  'medium': '',
+  'more-medium': '',
+  'more': ''
+})
+
+// Initialize from localStorage
 onMounted(() => {
-  selectedPlaylistLess.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_LESS) || ''
-  selectedPlaylistLessMedium.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_LESS_MEDIUM) || ''
-  selectedPlaylistMedium.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_MEDIUM) || ''
-  selectedPlaylistMoreMedium.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_MORE_MEDIUM) || ''
-  selectedPlaylistMore.value = localStorage.getItem(STORAGE_KEYS.PLAYLIST_MORE) || ''
+  popularityConfigs.forEach(config => {
+    const saved = localStorage.getItem(`playlist_${config.id}`)
+    if (saved) {
+      selections.value[config.id] = saved
+    }
+  })
 })
 
-// Save selections to localStorage when they change
-watch(selectedPlaylistLess, (value) => {
-  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_LESS, value)
-})
-watch(selectedPlaylistLessMedium, (value) => {
-  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_LESS_MEDIUM, value)
-})
-watch(selectedPlaylistMedium, (value) => {
-  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_MEDIUM, value)
-})
-watch(selectedPlaylistMoreMedium, (value) => {
-  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_MORE_MEDIUM, value)
-})
-watch(selectedPlaylistMore, (value) => {
-  if (value) localStorage.setItem(STORAGE_KEYS.PLAYLIST_MORE, value)
-})
+// Save to localStorage deeply when selections change
+watch(selections, (newSelections) => {
+  Object.entries(newSelections).forEach(([id, value]) => {
+    if (value) {
+      localStorage.setItem(`playlist_${id}`, value)
+    }
+  })
+}, { deep: true })
 
-const handleAddTracksLess = async () => {
-  if (!selectedPlaylistLess.value) {
-    apiStore.error = 'Seleziona una playlist per popolarità bassa'
+const handleAddTracks = async (id: PopularityCategoryId) => {
+  const playlistId = selections.value[id]
+  const config = popularityConfigs.find(c => c.id === id)
+
+  if (!playlistId || !config) {
+    apiStore.error = `Seleziona una playlist per: ${config?.title || id}`
     return
   }
-  await addTracksLess(selectedPlaylistLess.value)
-}
 
-const handleAddTracksLessMedium = async () => {
-  if (!selectedPlaylistLessMedium.value) {
-    apiStore.error = 'Seleziona una playlist per popolarità medio-bassa'
-    return
-  }
-  await addTracksLessMedium(selectedPlaylistLessMedium.value)
-}
-
-const handleAddTracksMedium = async () => {
-  if (!selectedPlaylistMedium.value) {
-    apiStore.error = 'Seleziona una playlist per popolarità media'
-    return
-  }
-  await addTracksMedium(selectedPlaylistMedium.value)
-}
-
-const handleAddTracksMoreMedium = async () => {
-  if (!selectedPlaylistMoreMedium.value) {
-    apiStore.error = 'Seleziona una playlist per popolarità medio-alta'
-    return
-  }
-  await addTracksMoreMedium(selectedPlaylistMoreMedium.value)
-}
-
-const handleAddTracksMore = async () => {
-  if (!selectedPlaylistMore.value) {
-    apiStore.error = 'Seleziona una playlist per popolarità alta'
-    return
-  }
-  await addTracksMore(selectedPlaylistMore.value)
+  await addTracksByPopularity(playlistId, id, config.successMessage)
 }
 </script>
 

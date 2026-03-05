@@ -14,11 +14,7 @@ import { playlistApiService } from './playlistApi'
  * @deprecated Use trackApiService, playlistApiService, or authApiService instead
  */
 class ApiService {
-  addTracksLess = trackApiService.addTracksLess
-  addTracksLessMedium = trackApiService.addTracksLessMedium
-  addTracksMedium = trackApiService.addTracksMedium
-  addTracksMoreMedium = trackApiService.addTracksMoreMedium
-  addTracksMore = trackApiService.addTracksMore
+  addTracksByPopularity = trackApiService.addTracksByPopularity
   addTracksByArtist = trackApiService.addTracksByArtist
   createPlaylistTrackMinor = playlistApiService.createPlaylistTrackMinor
 }

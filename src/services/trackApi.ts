@@ -8,43 +8,12 @@ import { API_ENDPOINTS } from '@/utils/constants'
  */
 export class TrackApiService {
   /**
-   * Adds tracks with low popularity to playlist
+   * Adds tracks to the designated playlist based on the specified popularity range
    * @param playlistId - The Spotify playlist ID to add tracks to
+   * @param range - The popularity range ('less', 'less-medium', 'medium', 'more-medium', 'more')
    */
-  async addTracksLess(playlistId: string): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.LESS, { playlistId } as AddTracksByPopularityRequest)
-  }
-
-  /**
-   * Adds tracks with low-medium popularity to playlist
-   * @param playlistId - The Spotify playlist ID to add tracks to
-   */
-  async addTracksLessMedium(playlistId: string): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.LESS_MEDIUM, { playlistId } as AddTracksByPopularityRequest)
-  }
-
-  /**
-   * Adds tracks with medium popularity to playlist
-   * @param playlistId - The Spotify playlist ID to add tracks to
-   */
-  async addTracksMedium(playlistId: string): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MEDIUM, { playlistId } as AddTracksByPopularityRequest)
-  }
-
-  /**
-   * Adds tracks with medium-high popularity to playlist
-   * @param playlistId - The Spotify playlist ID to add tracks to
-   */
-  async addTracksMoreMedium(playlistId: string): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MORE_MEDIUM, { playlistId } as AddTracksByPopularityRequest)
-  }
-
-  /**
-   * Adds tracks with high popularity to playlist
-   * @param playlistId - The Spotify playlist ID to add tracks to
-   */
-  async addTracksMore(playlistId: string): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(API_ENDPOINTS.TRACK.MORE, { playlistId } as AddTracksByPopularityRequest)
+  async addTracksByPopularity(playlistId: string, range: string): Promise<ApiResponse<TrackResponse>> {
+    return httpClient.post<TrackResponse>(`/api/track/popularity/${range}`, { playlistId } as AddTracksByPopularityRequest)
   }
 
   /**
@@ -59,4 +28,3 @@ export class TrackApiService {
 }
 
 export const trackApiService = new TrackApiService()
-
