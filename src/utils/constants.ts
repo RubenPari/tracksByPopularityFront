@@ -23,6 +23,13 @@ export const API_ENDPOINTS = {
     BASE: '/health',
     DETAILED: '/health/detailed',
   },
+  CLEANUP: {
+    DUPLICATES: '/cleanup/duplicates',
+    TRACKS: '/cleanup/tracks',
+  },
+  AUDIO_FEATURES: {
+    GENERATE_MOODS: '/audio-features/generate-mood-playlists',
+  },
 } as const
 
 /**
@@ -63,6 +70,8 @@ export const SUCCESS_MESSAGES = {
   ARTIST_TRACKS_ADDED: 'Tracce dell\'artista aggiunte alle playlist',
   PLAYLIST_CREATED: 'Playlist creata con successo',
   OPERATION_SUCCESS: 'Operazione completata con successo',
+  TRACKS_REMOVED: 'Tracce rimosse con successo dalla libreria',
+  MOOD_PLAYLISTS_GENERATED: 'Playlist generate con successo in base ai mood',
 } as const
 
 /**
