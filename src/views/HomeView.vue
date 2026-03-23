@@ -6,10 +6,6 @@
     </header>
 
     <main class="main-content">
-      <AudioFeaturesActions />
-
-      <div class="divider"></div>
-
       <TrackActions />
       
       <div class="divider"></div>
@@ -42,7 +38,6 @@ import { useApiStore } from '@/stores/api'
 import TrackActions from '@/components/TrackActions.vue'
 import ArtistForm from '@/components/ArtistForm.vue'
 import PlaylistActions from '@/components/PlaylistActions.vue'
-import AudioFeaturesActions from '@/components/AudioFeaturesActions.vue'
 import NotificationBanner from '@/components/NotificationBanner.vue'
 
 const apiStore = useApiStore()
