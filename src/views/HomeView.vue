@@ -12,10 +12,6 @@
       
       <ArtistForm />
       
-      <div class="divider"></div>
-      
-      <PlaylistActions />
-      
     </main>
 
     <NotificationBanner
@@ -37,7 +33,6 @@
 import { useApiStore } from '@/stores/api'
 import TrackActions from '@/components/TrackActions.vue'
 import ArtistForm from '@/components/ArtistForm.vue'
-import PlaylistActions from '@/components/PlaylistActions.vue'
 import NotificationBanner from '@/components/NotificationBanner.vue'
 
 const apiStore = useApiStore()

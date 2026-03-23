@@ -12,7 +12,6 @@ export const API_ENDPOINTS = {
   },
   PLAYLIST: {
     ALL: '/playlist/all',
-    CREATE_MINOR: '/playlist/create-playlist-track-minor',
   },
   AUTH: {
     STATUS: '/auth/is-auth',
@@ -65,7 +64,6 @@ export const SUCCESS_MESSAGES = {
   TRACKS_ADDED_MORE_MEDIUM: 'Tracce aggiunte alla playlist (popolarità medio-alta)',
   TRACKS_ADDED_MORE: 'Tracce aggiunte alla playlist (popolarità alta)',
   ARTIST_TRACKS_ADDED: 'Tracce dell\'artista aggiunte alle playlist',
-  PLAYLIST_CREATED: 'Playlist creata con successo',
   OPERATION_SUCCESS: 'Operazione completata con successo',
   TRACKS_REMOVED: 'Tracce rimosse con successo dalla libreria',
 } as const
