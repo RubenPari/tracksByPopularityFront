@@ -3,7 +3,8 @@ import type { AxiosResponse, AxiosError } from 'axios'
 import { useApiStore } from '@/stores/api'
 
 // Define the base URL from Vite env variables
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5246'
+// Empty string means relative URLs (e.g., behind a reverse proxy like nginx)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -18,7 +19,7 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response
   },
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
     const apiStore = useApiStore()
 
     if (error.response) {
@@ -27,7 +28,17 @@ apiClient.interceptors.response.use(
       // Handle known status codes
       if (status === 401 || status === 403) {
         apiStore.error = 'Autenticazione richiesta o sessione scaduta. Reindirizzamento...'
-        window.location.href = `${API_BASE_URL}/login`
+        // Fetch the Spotify login URL from the backend and redirect
+        try {
+          const loginResponse = await axios.get(`${API_BASE_URL}/auth/login`, { withCredentials: true })
+          const loginUrl = loginResponse.data?.data?.loginUrl
+          if (loginUrl) {
+            window.location.href = loginUrl
+          }
+        } catch {
+          // Fallback: redirect to auth/login endpoint directly
+          window.location.href = `${API_BASE_URL}/auth/login`
+        }
       } else if (status === 500) {
         apiStore.error = 'Errore interno del server. Riprova più tardi.'
       } else {
