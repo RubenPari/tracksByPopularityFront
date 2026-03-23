@@ -5,6 +5,8 @@ import { createLogger } from '@/utils/logger'
 
 const logger = createLogger('usePlaylists')
 
+let fetchPromise: Promise<void> | null = null
+
 /**
  * Composable for managing user playlists.
  * Provides functionality to fetch and manage playlists from Spotify.
@@ -18,27 +20,40 @@ export function usePlaylists() {
    * Fetches all playlists owned by the current user
    */
   const fetchPlaylists = async () => {
+    if (playlists.value.length > 0) {
+      return
+    }
+
+    if (fetchPromise) {
+      return fetchPromise
+    }
+
     loading.value = true
     error.value = null
 
-    try {
-      logger.info('Fetching user playlists')
-      const response = await playlistApiService.getAllPlaylists()
+    fetchPromise = (async () => {
+      try {
+        logger.info('Fetching user playlists')
+        const response = await playlistApiService.getAllPlaylists()
 
-      if (response.success && response.data) {
-        playlists.value = response.data
-        logger.info(`Fetched ${response.data.length} playlists`)
-      } else {
-        error.value = response.error || 'Failed to fetch playlists'
-        logger.warn('Failed to fetch playlists', { error: error.value })
+        if (response.success && response.data) {
+          playlists.value = response.data
+          logger.info(`Fetched ${response.data.length} playlists`)
+        } else {
+          error.value = response.error || 'Failed to fetch playlists'
+          logger.warn('Failed to fetch playlists', { error: error.value })
+        }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+        error.value = errorMessage
+        logger.error('Error fetching playlists', err)
+      } finally {
+        loading.value = false
+        fetchPromise = null
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-      error.value = errorMessage
-      logger.error('Error fetching playlists', err)
-    } finally {
-      loading.value = false
-    }
+    })()
+
+    return fetchPromise
   }
 
   /**
