@@ -20,9 +20,6 @@
       
       <PlaylistActions />
       
-      <div class="divider"></div>
-      
-      <LibraryCleanup />
     </main>
 
     <NotificationBanner
@@ -45,7 +42,6 @@ import { useApiStore } from '@/stores/api'
 import TrackActions from '@/components/TrackActions.vue'
 import ArtistForm from '@/components/ArtistForm.vue'
 import PlaylistActions from '@/components/PlaylistActions.vue'
-import LibraryCleanup from '@/components/LibraryCleanup.vue'
 import AudioFeaturesActions from '@/components/AudioFeaturesActions.vue'
 import NotificationBanner from '@/components/NotificationBanner.vue'
 
