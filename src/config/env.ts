@@ -10,7 +10,7 @@ export const ENV = {
   /**
    * API base URL from environment variable or default
    */
-  API_BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080',
   
   /**
    * Whether the application is running in development mode
@@ -36,7 +36,7 @@ export function validateEnv(): void {
   const required: Array<keyof typeof ENV> = ['API_BASE_URL']
   
   for (const key of required) {
-    if (!ENV[key]) {
+    if (ENV[key] === undefined || ENV[key] === null) {
       throw new Error(`Missing required environment variable: ${key}`)
     }
   }
