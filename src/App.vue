@@ -11,32 +11,53 @@ import ErrorBoundary from '@/components/ErrorBoundary.vue'
 
 <style>
 :root {
-  --color-background: #ffffff;
-  --color-background-soft: #f8f9fa;
-  --color-background-hover: #f0f1f3;
-  --color-background-mute: #f2f3f5;
-  --color-border: #e1e4e8;
-  --color-border-hover: #d0d7de;
-  --color-heading: #24292f;
-  --color-text: #24292f;
-  --color-text-secondary: #57606a;
-  --color-primary: #646cff;
-  --color-primary-hover: #535bf2;
+  --color-background: #fafbfc;
+  --color-background-soft: #ffffff;
+  --color-background-hover: #f0f4ff;
+  --color-background-mute: #f5f7fa;
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+  --color-heading: #1e293b;
+  --color-text: #334155;
+  --color-text-secondary: #64748b;
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  --color-tier-less: #ef4444;
+  --color-tier-less-medium: #f97316;
+  --color-tier-medium: #eab308;
+  --color-tier-more-medium: #84cc16;
+  --color-tier-more: #a855f7;
+
+  --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  --gradient-tier-less: linear-gradient(135deg, #ef4444, #f97316);
+  --gradient-tier-less-medium: linear-gradient(135deg, #f97316, #eab308);
+  --gradient-tier-medium: linear-gradient(135deg, #eab308, #84cc16);
+  --gradient-tier-more-medium: linear-gradient(135deg, #84cc16, #22c55e);
+  --gradient-tier-more: linear-gradient(135deg, #a855f7, #6366f1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #0d1117;
-    --color-background-soft: #161b22;
-    --color-background-hover: #1c2128;
-    --color-background-mute: #21262d;
-    --color-border: #30363d;
-    --color-border-hover: #484f58;
-    --color-heading: #f0f6fc;
-    --color-text: #c9d1d9;
-    --color-text-secondary: #8b949e;
-    --color-primary: #646cff;
-    --color-primary-hover: #535bf2;
+    --color-background: #1a1b26;
+    --color-background-soft: #24253a;
+    --color-background-hover: #2d2e47;
+    --color-background-mute: #1f2033;
+    --color-border: #3b3d5c;
+    --color-border-hover: #5a5d7a;
+    --color-heading: #f1f5f9;
+    --color-text: #e2e8f0;
+    --color-text-secondary: #94a3b8;
+    --color-primary: #818cf8;
+    --color-primary-hover: #6366f1;
+    --color-success: #34d399;
+    --color-error: #f87171;
+    --color-warning: #fbbf24;
+    --color-info: #60a5fa;
   }
 }
 
