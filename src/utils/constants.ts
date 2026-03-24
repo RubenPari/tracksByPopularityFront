@@ -45,27 +45,27 @@ export const HTTP_STATUS = {
  * Error messages
  */
 export const ERROR_MESSAGES = {
-  UNAUTHORIZED: 'Non autorizzato. Verifica le credenziali Spotify.',
-  BAD_REQUEST: 'Richiesta non valida',
-  NOT_FOUND: 'Risorsa non trovata',
-  SERVER_ERROR: 'Errore del server. Riprova più tardi.',
-  CONNECTION_ERROR: 'Impossibile connettersi al backend. Assicurati che il server sia in esecuzione.',
-  UNKNOWN_ERROR: 'Errore sconosciuto',
-  NETWORK_ERROR: 'Errore di rete. Controlla la connessione internet.',
+  UNAUTHORIZED: 'errors.unauthorized',
+  BAD_REQUEST: 'errors.badRequest',
+  NOT_FOUND: 'errors.notFound',
+  SERVER_ERROR: 'errors.serverError',
+  CONNECTION_ERROR: 'errors.connectionError',
+  UNKNOWN_ERROR: 'errors.unknownError',
+  NETWORK_ERROR: 'errors.networkError',
 } as const
 
 /**
  * Success messages
  */
 export const SUCCESS_MESSAGES = {
-  TRACKS_ADDED_LESS: 'Tracce aggiunte alla playlist (popolarità bassa)',
-  TRACKS_ADDED_LESS_MEDIUM: 'Tracce aggiunte alla playlist (popolarità medio-bassa)',
-  TRACKS_ADDED_MEDIUM: 'Tracce aggiunte alla playlist (popolarità media)',
-  TRACKS_ADDED_MORE_MEDIUM: 'Tracce aggiunte alla playlist (popolarità medio-alta)',
-  TRACKS_ADDED_MORE: 'Tracce aggiunte alla playlist (popolarità alta)',
-  ARTIST_TRACKS_ADDED: 'Tracce dell\'artista aggiunte alle playlist',
-  OPERATION_SUCCESS: 'Operazione completata con successo',
-  TRACKS_REMOVED: 'Tracce rimosse con successo dalla libreria',
+  TRACKS_ADDED_LESS: 'success.tracksAddedLess',
+  TRACKS_ADDED_LESS_MEDIUM: 'success.tracksAddedLessMedium',
+  TRACKS_ADDED_MEDIUM: 'success.tracksAddedMedium',
+  TRACKS_ADDED_MORE_MEDIUM: 'success.tracksAddedMoreMedium',
+  TRACKS_ADDED_MORE: 'success.tracksAddedMore',
+  ARTIST_TRACKS_ADDED: 'success.artistTracksAdded',
+  OPERATION_SUCCESS: 'success.operationSuccess',
+  TRACKS_REMOVED: 'success.tracksRemoved',
 } as const
 
 /**

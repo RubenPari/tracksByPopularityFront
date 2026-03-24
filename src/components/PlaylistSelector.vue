@@ -1,7 +1,7 @@
 <template>
   <div class="playlist-selector">
     <label :for="inputId" class="playlist-label">
-      {{ label }}
+      {{ displayLabel }}
       <span v-if="required" class="required">*</span>
     </label>
     <div class="select-wrapper">
@@ -13,13 +13,13 @@
         class="playlist-select"
         :class="{ 'has-error': hasError }"
       >
-        <option value="" disabled>{{ placeholder }}</option>
+        <option value="" disabled>{{ displayPlaceholder }}</option>
         <option
           v-for="playlist in playlists"
           :key="playlist.id"
           :value="playlist.id"
         >
-          {{ playlist.name }} ({{ playlist.totalTracks }} tracce)
+          {{ playlist.name }} ({{ t('playlist.trackCount', { count: playlist.totalTracks }) }})
         </option>
       </select>
       <button
@@ -28,18 +28,19 @@
         :disabled="loading"
         class="refresh-button"
         type="button"
-        title="Aggiorna playlist"
+        :title="t('playlist.refreshTitle')"
       >
         🔄
       </button>
     </div>
     <p v-if="hasError" class="error-message">{{ errorMessage }}</p>
-    <p v-if="loading" class="loading-message">Caricamento playlist...</p>
+    <p v-if="loading" class="loading-message">{{ t('playlist.loadingMessage') }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { usePlaylists } from '@/composables/usePlaylists'
 
 interface Props {
@@ -53,13 +54,17 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: 'Seleziona playlist',
-  placeholder: 'Scegli una playlist...',
+  label: '',
+  placeholder: '',
   required: false,
   disabled: false,
   showRefresh: true,
   errorMessage: '',
 })
+
+const { t } = useI18n()
+const displayLabel = computed(() => props.label || t('playlist.defaultLabel'))
+const displayPlaceholder = computed(() => props.placeholder || t('playlist.defaultPlaceholder'))
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]

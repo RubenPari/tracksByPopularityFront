@@ -1,0 +1,96 @@
+{
+  "common": {
+    "close": "Chiudi",
+    "retry": "Riprova",
+    "loading": "Elaborazione...",
+    "somethingWentWrong": "Qualcosa è andato storto",
+    "unexpectedError": "Si è verificato un errore imprevisto"
+  },
+  "home": {
+    "title": "Tracks by Popularity",
+    "subtitle": "Gestisci le tue playlist Spotify in base alla popolarità delle tracce"
+  },
+  "tracks": {
+    "sectionTitle": "Gestione Tracce per Popolarità",
+    "sectionDescription": "Aggiungi le tue tracce alle playlist in base alla loro popolarità su Spotify. Seleziona una playlist per ogni categoria di popolarità.",
+    "selectPlaylistError": "Seleziona una playlist per: {category}",
+    "popularity": {
+      "less": {
+        "label": "Playlist per Popolarità Bassa",
+        "placeholder": "Seleziona playlist per popolarità bassa...",
+        "title": "Popolarità Bassa",
+        "description": "Aggiungi tracce con popolarità bassa (0-20)"
+      },
+      "lessMedium": {
+        "label": "Playlist per Popolarità Medio-Bassa",
+        "placeholder": "Seleziona playlist per popolarità medio-bassa...",
+        "title": "Popolarità Medio-Bassa",
+        "description": "Aggiungi tracce con popolarità medio-bassa (21-40)"
+      },
+      "medium": {
+        "label": "Playlist per Popolarità Media",
+        "placeholder": "Seleziona playlist per popolarità media...",
+        "title": "Popolarità Media",
+        "description": "Aggiungi tracce con popolarità media (41-60)"
+      },
+      "moreMedium": {
+        "label": "Playlist per Popolarità Medio-Alta",
+        "placeholder": "Seleziona playlist per popolarità medio-alta...",
+        "title": "Popolarità Medio-Alta",
+        "description": "Aggiungi tracce con popolarità medio-alta (61-80)"
+      },
+      "more": {
+        "label": "Playlist per Popolarità Alta",
+        "placeholder": "Seleziona playlist per popolarità alta...",
+        "title": "Popolarità Alta",
+        "description": "Aggiungi tracce con popolarità alta (81-100)"
+      }
+    }
+  },
+  "artist": {
+    "sectionTitle": "Gestione Tracce per Artista",
+    "sectionDescription": "Aggiungi le tracce di un artista specifico alle playlist in base alla popolarità",
+    "formLabel": "ID Artista Spotify",
+    "placeholder": "Inserisci l'ID dell'artista (es: 4Z8W4fKeB5YxbusRsdQVPb)",
+    "inputTitle": "L'ID artista Spotify deve essere esattamente 22 caratteri alfanumerici",
+    "helpText": "Puoi trovare l'ID dell'artista nell'URL della sua pagina Spotify",
+    "submitButton": "Aggiungi Tracce"
+  },
+  "playlist": {
+    "defaultLabel": "Seleziona playlist",
+    "defaultPlaceholder": "Scegli una playlist...",
+    "refreshTitle": "Aggiorna playlist",
+    "loadingMessage": "Caricamento playlist...",
+    "trackCount": "{count} tracce"
+  },
+  "errors": {
+    "unauthorized": "Non autorizzato. Verifica le credenziali Spotify.",
+    "badRequest": "Richiesta non valida",
+    "notFound": "Risorsa non trovata",
+    "serverError": "Errore del server. Riprova più tardi.",
+    "connectionError": "Impossibile connettersi al backend. Assicurati che il server sia in esecuzione.",
+    "unknownError": "Errore sconosciuto",
+    "networkError": "Errore di rete. Controlla la connessione internet.",
+    "authRequired": "Autenticazione richiesta o sessione scaduta. Reindirizzamento...",
+    "internalServer": "Errore interno del server. Riprova più tardi.",
+    "genericError": "Si è verificato un errore.",
+    "cannotConnect": "Impossibile connettersi al server. Controlla la tua connessione.",
+    "unexpectedError": "Si è verificato un errore imprevisto."
+  },
+  "success": {
+    "tracksAddedLess": "Tracce aggiunte alla playlist (popolarità bassa)",
+    "tracksAddedLessMedium": "Tracce aggiunte alla playlist (popolarità medio-bassa)",
+    "tracksAddedMedium": "Tracce aggiunte alla playlist (popolarità media)",
+    "tracksAddedMoreMedium": "Tracce aggiunte alla playlist (popolarità medio-alta)",
+    "tracksAddedMore": "Tracce aggiunte alla playlist (popolarità alta)",
+    "artistTracksAdded": "Tracce dell'artista aggiunte alle playlist",
+    "operationSuccess": "Operazione completata con successo",
+    "tracksRemoved": "Tracce rimosse con successo dalla libreria"
+  },
+  "validation": {
+    "invalidSpotifyId": "ID non valido. Deve essere esattamente {length} caratteri alfanumerici."
+  },
+  "language": {
+    "switchLabel": "Lingua"
+  }
+}

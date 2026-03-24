@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import i18n from './i18n'
 import { validateEnv } from './config/env'
 import { logger } from './utils/logger'
 
@@ -21,6 +22,7 @@ try {
 const app = createApp(App)
 
 app.use(createPinia())
+app.use(i18n)
 app.use(router)
 
 app.mount('#app')

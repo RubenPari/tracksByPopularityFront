@@ -1,35 +1,35 @@
 <template>
   <div class="artist-form">
-    <h2 class="section-title">Gestione Tracce per Artista</h2>
+    <h2 class="section-title">{{ t('artist.sectionTitle') }}</h2>
     <p class="section-description">
-      Aggiungi le tracce di un artista specifico alle playlist in base alla popolarità
+      {{ t('artist.sectionDescription') }}
     </p>
 
     <form @submit.prevent="handleSubmit" class="form">
       <div class="form-group">
-        <label for="artistId" class="label">ID Artista Spotify</label>
+        <label for="artistId" class="label">{{ t('artist.formLabel') }}</label>
         <input
           id="artistId"
           v-model="artistId"
           type="text"
           class="input"
           :class="{ 'input-error': hasError }"
-          placeholder="Inserisci l'ID dell'artista (es: 4Z8W4fKeB5YxbusRsdQVPb)"
+          :placeholder="t('artist.placeholder')"
           required
           :disabled="loading"
           pattern="[a-zA-Z0-9]{22}"
-          title="L'ID artista Spotify deve essere esattamente 22 caratteri alfanumerici"
+          :title="t('artist.inputTitle')"
         />
         <p class="help-text">
-          Puoi trovare l'ID dell'artista nell'URL della sua pagina Spotify
+          {{ t('artist.helpText') }}
         </p>
       </div>
 
       <button type="submit" class="submit-button" :disabled="loading || !artistId.trim()">
-        <span v-if="!loading">Aggiungi Tracce</span>
+        <span v-if="!loading">{{ t('artist.submitButton') }}</span>
         <span v-else class="button-loading">
           <span class="spinner-small"></span>
-          Elaborazione...
+          {{ t('common.loading') }}
         </span>
       </button>
     </form>
@@ -38,10 +38,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useApiStore } from '@/stores/api'
 import { useTrackActions } from '@/composables/useTrackActions'
 import { useFormValidation } from '@/composables/useFormValidation'
 
+const { t } = useI18n()
 const apiStore = useApiStore()
 const { addTracksByArtist, loading } = useTrackActions()
 const { validateArtistId, getSpotifyIdErrorMessage } = useFormValidation()

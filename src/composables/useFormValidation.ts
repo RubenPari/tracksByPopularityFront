@@ -1,3 +1,4 @@
+import { useI18n } from 'vue-i18n'
 import { VALIDATION } from '@/utils/constants'
 
 /**
@@ -5,6 +6,7 @@ import { VALIDATION } from '@/utils/constants'
  * Provides reusable validation functions for forms
  */
 export function useFormValidation() {
+  const { t } = useI18n()
   /**
    * Validates a Spotify ID (artist, track, playlist, etc.)
    * Spotify IDs are exactly 22 alphanumeric characters
@@ -30,7 +32,7 @@ export function useFormValidation() {
    * Gets validation error message for Spotify ID
    */
   const getSpotifyIdErrorMessage = (): string => {
-    return `ID non valido. Deve essere esattamente ${VALIDATION.SPOTIFY_ID_LENGTH} caratteri alfanumerici.`
+    return t('validation.invalidSpotifyId', { length: VALIDATION.SPOTIFY_ID_LENGTH })
   }
 
   return {

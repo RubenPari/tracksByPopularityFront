@@ -1,6 +1,7 @@
 import axios from 'axios'
 import type { AxiosResponse, AxiosError } from 'axios'
 import { useApiStore } from '@/stores/api'
+import i18n from '@/i18n'
 
 // Define the base URL from Vite env variables
 // Empty string means relative URLs (e.g., behind a reverse proxy like nginx)
@@ -22,12 +23,14 @@ apiClient.interceptors.response.use(
   async (error: AxiosError) => {
     const apiStore = useApiStore()
 
+    const t = i18n.global.t
+
     if (error.response) {
       const status = error.response.status
 
       // Handle known status codes
       if (status === 401 || status === 403) {
-        apiStore.error = 'Autenticazione richiesta o sessione scaduta. Reindirizzamento...'
+        apiStore.error = t('errors.authRequired')
         // Fetch the Spotify login URL from the backend and redirect
         try {
           const loginResponse = await axios.get(`${API_BASE_URL}/auth/login`, { withCredentials: true })
@@ -40,15 +43,15 @@ apiClient.interceptors.response.use(
           window.location.href = `${API_BASE_URL}/auth/login`
         }
       } else if (status === 500) {
-        apiStore.error = 'Errore interno del server. Riprova più tardi.'
+        apiStore.error = t('errors.internalServer')
       } else {
         const data = error.response.data as { error?: string; message?: string } | undefined
-        apiStore.error = data?.error || data?.message || 'Si è verificato un errore.'
+        apiStore.error = data?.error || data?.message || t('errors.genericError')
       }
     } else if (error.request) {
-      apiStore.error = 'Impossibile connettersi al server. Controlla la tua connessione.'
+      apiStore.error = t('errors.cannotConnect')
     } else {
-      apiStore.error = 'Si è verificato un errore imprevisto.'
+      apiStore.error = t('errors.unexpectedError')
     }
 
     return Promise.reject(error)

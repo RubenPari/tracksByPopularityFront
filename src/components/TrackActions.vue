@@ -1,9 +1,8 @@
 <template>
   <div class="track-actions">
-    <h2 class="section-title">Gestione Tracce per Popolarità</h2>
+    <h2 class="section-title">{{ t('tracks.sectionTitle') }}</h2>
     <p class="section-description">
-      Aggiungi le tue tracce alle playlist in base alla loro popolarità su Spotify.
-      Seleziona una playlist per ogni categoria di popolarità.
+      {{ t('tracks.sectionDescription') }}
     </p>
 
     <div class="playlist-selection-section">
@@ -35,13 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useTrackActions } from '@/composables/useTrackActions'
 import { useApiStore } from '@/stores/api'
 import { SUCCESS_MESSAGES } from '@/utils/constants'
 import ActionButton from './ActionButton.vue'
 import PlaylistSelector from './PlaylistSelector.vue'
 
+const { t } = useI18n()
 const { addTracksByPopularity, loading } = useTrackActions()
 const apiStore = useApiStore()
 
@@ -54,56 +55,56 @@ interface PopularityConfig {
   icon: string
   title: string
   description: string
-  successMessage: string
+  successMessageKey: string
 }
 
-const popularityConfigs: PopularityConfig[] = [
+const popularityConfigs = computed<PopularityConfig[]>(() => [
   {
     id: 'less',
-    label: 'Playlist per Popolarità Bassa',
-    placeholder: 'Seleziona playlist per popolarità bassa...',
+    label: t('tracks.popularity.less.label'),
+    placeholder: t('tracks.popularity.less.placeholder'),
     icon: '📉',
-    title: 'Popolarità Bassa',
-    description: 'Aggiungi tracce con popolarità bassa (0-20)',
-    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_LESS
+    title: t('tracks.popularity.less.title'),
+    description: t('tracks.popularity.less.description'),
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_LESS
   },
   {
     id: 'less-medium',
-    label: 'Playlist per Popolarità Medio-Bassa',
-    placeholder: 'Seleziona playlist per popolarità medio-bassa...',
+    label: t('tracks.popularity.lessMedium.label'),
+    placeholder: t('tracks.popularity.lessMedium.placeholder'),
     icon: '📊',
-    title: 'Popolarità Medio-Bassa',
-    description: 'Aggiungi tracce con popolarità medio-bassa (21-40)',
-    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_LESS_MEDIUM
+    title: t('tracks.popularity.lessMedium.title'),
+    description: t('tracks.popularity.lessMedium.description'),
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_LESS_MEDIUM
   },
   {
     id: 'medium',
-    label: 'Playlist per Popolarità Media',
-    placeholder: 'Seleziona playlist per popolarità media...',
+    label: t('tracks.popularity.medium.label'),
+    placeholder: t('tracks.popularity.medium.placeholder'),
     icon: '📈',
-    title: 'Popolarità Media',
-    description: 'Aggiungi tracce con popolarità media (41-60)',
-    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_MEDIUM
+    title: t('tracks.popularity.medium.title'),
+    description: t('tracks.popularity.medium.description'),
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MEDIUM
   },
   {
     id: 'more-medium',
-    label: 'Playlist per Popolarità Medio-Alta',
-    placeholder: 'Seleziona playlist per popolarità medio-alta...',
+    label: t('tracks.popularity.moreMedium.label'),
+    placeholder: t('tracks.popularity.moreMedium.placeholder'),
     icon: '🔥',
-    title: 'Popolarità Medio-Alta',
-    description: 'Aggiungi tracce con popolarità medio-alta (61-80)',
-    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_MORE_MEDIUM
+    title: t('tracks.popularity.moreMedium.title'),
+    description: t('tracks.popularity.moreMedium.description'),
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MORE_MEDIUM
   },
   {
     id: 'more',
-    label: 'Playlist per Popolarità Alta',
-    placeholder: 'Seleziona playlist per popolarità alta...',
+    label: t('tracks.popularity.more.label'),
+    placeholder: t('tracks.popularity.more.placeholder'),
     icon: '⭐',
-    title: 'Popolarità Alta',
-    description: 'Aggiungi tracce con popolarità alta (81-100)',
-    successMessage: SUCCESS_MESSAGES.TRACKS_ADDED_MORE
+    title: t('tracks.popularity.more.title'),
+    description: t('tracks.popularity.more.description'),
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MORE
   }
-]
+])
 
 // Centralized state for selections
 const selections = ref<Record<PopularityCategoryId, string>>({
@@ -116,7 +117,7 @@ const selections = ref<Record<PopularityCategoryId, string>>({
 
 // Initialize from localStorage
 onMounted(() => {
-  popularityConfigs.forEach(config => {
+  popularityConfigs.value.forEach(config => {
     const saved = localStorage.getItem(`playlist_${config.id}`)
     if (saved) {
       selections.value[config.id] = saved
@@ -135,14 +136,14 @@ watch(selections, (newSelections) => {
 
 const handleAddTracks = async (id: PopularityCategoryId) => {
   const playlistId = selections.value[id]
-  const config = popularityConfigs.find(c => c.id === id)
+  const config = popularityConfigs.value.find(c => c.id === id)
 
   if (!playlistId || !config) {
-    apiStore.error = `Seleziona una playlist per: ${config?.title || id}`
+    apiStore.error = t('tracks.selectPlaylistError', { category: config?.title || id })
     return
   }
 
-  await addTracksByPopularity(playlistId, id, config.successMessage)
+  await addTracksByPopularity(playlistId, id, config.successMessageKey)
 }
 </script>
 

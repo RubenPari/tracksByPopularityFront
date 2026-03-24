@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { ApiResponse } from '@/types/api'
 import { createLogger } from '@/utils/logger'
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from '@/utils/constants'
+import i18n from '@/i18n'
 
 const logger = createLogger('ApiStore')
 
@@ -25,24 +26,26 @@ export const useApiStore = defineStore('api', () => {
     error.value = null
     success.value = null
 
+    const t = i18n.global.t
+
     try {
       logger.debug('Executing API call')
       const response = await apiCall()
 
       if (response.success) {
-        const message = successMessage || response.message || SUCCESS_MESSAGES.OPERATION_SUCCESS
+        const message = successMessage ? t(successMessage) : response.message || t(SUCCESS_MESSAGES.OPERATION_SUCCESS)
         success.value = message
         logger.info('API call succeeded', { message })
         return { success: true, data: response.data, message: response.message }
       } else {
-        const errorMsg = response.error || ERROR_MESSAGES.UNKNOWN_ERROR
+        const errorMsg = response.error || t(ERROR_MESSAGES.UNKNOWN_ERROR)
         error.value = errorMsg
         logger.warn('API call failed', { error: errorMsg, errorCode: response.errorCode })
         return { success: false, error: response.error }
       }
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : ERROR_MESSAGES.UNKNOWN_ERROR
+        err instanceof Error ? err.message : t(ERROR_MESSAGES.UNKNOWN_ERROR)
       error.value = errorMessage
       logger.error('API call exception', err)
       return { success: false, error: errorMessage }

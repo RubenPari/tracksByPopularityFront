@@ -4,7 +4,7 @@
       <div class="notification-content">
         <span class="icon">{{ type === 'success' ? '✓' : '✕' }}</span>
         <p class="message">{{ message }}</p>
-        <button class="close-button" @click="$emit('close')" aria-label="Chiudi">
+        <button class="close-button" @click="$emit('close')" :aria-label="t('common.close')">
           ×
         </button>
       </div>
@@ -13,6 +13,10 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps<{
   message: string | null
   type: 'success' | 'error'

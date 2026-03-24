@@ -1,9 +1,9 @@
 <template>
   <div v-if="hasError" class="error-boundary">
     <div class="error-content">
-      <h2 class="error-title">⚠️ Qualcosa è andato storto</h2>
+      <h2 class="error-title">⚠️ {{ t('common.somethingWentWrong') }}</h2>
       <p class="error-message">{{ errorMessage }}</p>
-      <button @click="resetError" class="retry-button">Riprova</button>
+      <button @click="resetError" class="retry-button">{{ t('common.retry') }}</button>
     </div>
   </div>
   <slot v-else />
@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import { ref, onErrorCaptured } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 /**
  * ErrorBoundary Component
@@ -28,6 +29,8 @@ import { ref, onErrorCaptured } from 'vue'
  * ```
  */
 
+const { t } = useI18n()
+
 /** Reactive state indicating if an error has been caught */
 const hasError = ref(false)
 
@@ -43,7 +46,7 @@ const errorMessage = ref<string>('')
  */
 onErrorCaptured((err: unknown) => {
   hasError.value = true
-  errorMessage.value = err instanceof Error ? err.message : 'Si è verificato un errore imprevisto'
+  errorMessage.value = err instanceof Error ? err.message : t('common.unexpectedError')
 
   // Log error for debugging
   console.error('Error caught by boundary:', err)

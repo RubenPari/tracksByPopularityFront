@@ -1,8 +1,11 @@
 <template>
   <div class="home-view">
     <header class="header">
-      <h1 class="title">🎵 Tracks by Popularity</h1>
-      <p class="subtitle">Gestisci le tue playlist Spotify in base alla popolarità delle tracce</p>
+      <div class="header-top">
+        <h1 class="title">🎵 {{ t('home.title') }}</h1>
+        <LanguageSwitcher />
+      </div>
+      <p class="subtitle">{{ t('home.subtitle') }}</p>
     </header>
 
     <main class="main-content">
@@ -30,11 +33,14 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useApiStore } from '@/stores/api'
 import TrackActions from '@/components/TrackActions.vue'
 import ArtistForm from '@/components/ArtistForm.vue'
 import NotificationBanner from '@/components/NotificationBanner.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
+const { t } = useI18n()
 const apiStore = useApiStore()
 </script>
 
@@ -49,6 +55,23 @@ const apiStore = useApiStore()
 .header {
   text-align: center;
   margin-bottom: 3rem;
+}
+
+.header-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.header-top .title {
+  margin: 0;
+}
+
+.header-top :deep(.language-switcher) {
+  position: absolute;
+  right: 0;
 }
 
 .title {
