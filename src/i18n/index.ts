@@ -13,9 +13,10 @@ function getDefaultLocale(): string {
 
 const i18n = createI18n({
   legacy: false,
+  globalInjection: true,
   locale: getDefaultLocale(),
   fallbackLocale: 'it',
-  messages: { en, it } as Record<string, MessageSchema>,
+  messages: { en, it },
 })
 
 export default i18n

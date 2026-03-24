@@ -63,6 +63,15 @@ export interface DetailedHealthResponse {
 }
 
 /**
+ * Artist summary from user's library
+ */
+export interface ArtistSummary {
+  id: string
+  name: string
+  count: number
+}
+
+/**
  * Playlist information from Spotify
  */
 export interface PlaylistInfo {

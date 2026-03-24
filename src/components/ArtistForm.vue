@@ -5,73 +5,96 @@
       {{ t('artist.sectionDescription') }}
     </p>
 
-    <form @submit.prevent="handleSubmit" class="form">
-      <div class="form-group">
-        <label for="artistId" class="label">{{ t('artist.formLabel') }}</label>
-        <input
-          id="artistId"
-          v-model="artistId"
-          type="text"
-          class="input"
-          :class="{ 'input-error': hasError }"
-          :placeholder="t('artist.placeholder')"
-          required
-          :disabled="loading"
-          pattern="[a-zA-Z0-9]{22}"
-          :title="t('artist.inputTitle')"
-        />
-        <p class="help-text">
-          {{ t('artist.helpText') }}
-        </p>
+    <div class="search-wrapper">
+      <input
+        v-model="searchQuery"
+        type="text"
+        class="search-input"
+        :placeholder="t('artist.searchPlaceholder')"
+        :disabled="loadingArtists"
+      />
+    </div>
+
+    <div v-if="loadingArtists" class="loading-state">
+      <span class="spinner"></span>
+      {{ t('artist.loadingArtists') }}
+    </div>
+
+    <div v-else-if="artists.length === 0" class="empty-state">
+      {{ t('artist.noArtists') }}
+    </div>
+
+    <template v-else>
+      <div v-if="filteredArtists.length === 0" class="empty-state">
+        {{ t('artist.noResults') }}
       </div>
 
-      <button type="submit" class="submit-button" :disabled="loading || !artistId.trim()">
+      <div v-else class="artist-grid-container">
+        <div class="artist-grid">
+          <button
+            v-for="artist in filteredArtists"
+            :key="artist.id"
+            class="artist-card"
+            :class="{ selected: selectedArtist?.id === artist.id }"
+            @click="selectArtist(artist)"
+            type="button"
+          >
+            <span class="artist-name">{{ artist.name }}</span>
+            <span class="artist-count">{{ t('artist.trackCount', { count: artist.count }) }}</span>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <div class="submit-section">
+      <p v-if="!selectedArtist" class="select-prompt">{{ t('artist.selectPrompt') }}</p>
+      <button
+        class="submit-button"
+        :disabled="!selectedArtist || loading"
+        @click="handleSubmit"
+      >
         <span v-if="!loading">{{ t('artist.submitButton') }}</span>
         <span v-else class="button-loading">
           <span class="spinner-small"></span>
           {{ t('common.loading') }}
         </span>
       </button>
-    </form>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useApiStore } from '@/stores/api'
 import { useTrackActions } from '@/composables/useTrackActions'
-import { useFormValidation } from '@/composables/useFormValidation'
+import { useArtistSelection } from '@/composables/useArtistSelection'
+import { SUCCESS_MESSAGES } from '@/utils/constants'
 
 const { t } = useI18n()
 const apiStore = useApiStore()
 const { addTracksByArtist, loading } = useTrackActions()
-const { validateArtistId, getSpotifyIdErrorMessage } = useFormValidation()
+const {
+  artists,
+  searchQuery,
+  selectedArtist,
+  loadingArtists,
+  filteredArtists,
+  fetchArtists,
+  selectArtist,
+} = useArtistSelection()
 
-const artistId = ref('')
-const hasError = ref(false)
+onMounted(() => {
+  fetchArtists()
+})
 
 const handleSubmit = async () => {
-  const trimmedId = artistId.value.trim()
+  if (!selectedArtist.value) return
 
-  if (!trimmedId) {
-    hasError.value = true
-    return
-  }
-
-  if (!validateArtistId(trimmedId)) {
-    hasError.value = true
-    apiStore.error = getSpotifyIdErrorMessage()
-    return
-  }
-
-  hasError.value = false
-
-  await addTracksByArtist(trimmedId)
+  await addTracksByArtist(selectedArtist.value.id)
 
   if (apiStore.success) {
-    artistId.value = ''
-    hasError.value = false
+    selectedArtist.value = null
   }
 }
 </script>
@@ -94,22 +117,11 @@ const handleSubmit = async () => {
   margin-bottom: 2rem;
 }
 
-.form {
-  max-width: 600px;
-}
-
-.form-group {
+.search-wrapper {
   margin-bottom: 1.5rem;
 }
 
-.label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
-.input {
+.search-input {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 2px solid var(--color-border);
@@ -120,34 +132,99 @@ const handleSubmit = async () => {
   transition: border-color 0.3s ease;
 }
 
-.input:focus {
+.search-input:focus {
   outline: none;
   border-color: var(--color-primary);
 }
 
-.input:disabled {
+.search-input:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.input-error {
-  border-color: #ef4444;
-  background-color: rgba(239, 68, 68, 0.05);
+.artist-grid-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+  padding: 0.25rem;
 }
 
-.input-error:focus {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
 }
 
-.help-text {
-  margin-top: 0.5rem;
+.artist-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: var(--color-background-soft);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.artist-card:hover {
+  border-color: var(--color-primary);
+  background: var(--color-background-hover, var(--color-background-soft));
+}
+
+.artist-card.selected {
+  border-color: var(--color-primary);
+  background: rgba(100, 108, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.15);
+}
+
+.artist-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.artist-count {
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+
+.submit-section {
+  margin-top: 1.5rem;
+}
+
+.select-prompt {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
 }
 
 .submit-button {
   width: 100%;
+  max-width: 400px;
   padding: 0.875rem 1.5rem;
   background: var(--color-primary);
   color: white;
@@ -177,6 +254,15 @@ const handleSubmit = async () => {
   gap: 0.5rem;
 }
 
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
 .spinner-small {
   width: 1rem;
   height: 1rem;
@@ -189,6 +275,12 @@ const handleSubmit = async () => {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .artist-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
 </style>

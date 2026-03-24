@@ -1,5 +1,5 @@
 import { httpClient } from './httpClient'
-import type { ApiResponse, TrackResponse, AddTracksByPopularityRequest } from '@/types/api'
+import type { ApiResponse, TrackResponse, AddTracksByPopularityRequest, ArtistSummary } from '@/types/api'
 import { API_ENDPOINTS } from '@/utils/constants'
 
 /**
@@ -20,6 +20,10 @@ export class TrackApiService {
    * Adds tracks by a specific artist to playlists based on popularity
    * @param artistId - The Spotify artist ID (22 alphanumeric characters)
    */
+  async getLibraryArtists(): Promise<ApiResponse<ArtistSummary[]>> {
+    return httpClient.get<ArtistSummary[]>('/api/track/artists')
+  }
+
   async addTracksByArtist(artistId: string): Promise<ApiResponse<TrackResponse>> {
     return httpClient.post<TrackResponse>(
       `${API_ENDPOINTS.TRACK.ARTIST}?artistId=${encodeURIComponent(artistId)}`

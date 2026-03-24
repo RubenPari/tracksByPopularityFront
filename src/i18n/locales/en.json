@@ -49,12 +49,14 @@
   },
   "artist": {
     "sectionTitle": "Track Management by Artist",
-    "sectionDescription": "Add tracks from a specific artist to playlists based on popularity",
-    "formLabel": "Spotify Artist ID",
-    "placeholder": "Enter the artist ID (e.g.: 4Z8W4fKeB5YxbusRsdQVPb)",
-    "inputTitle": "The Spotify artist ID must be exactly 22 alphanumeric characters",
-    "helpText": "You can find the artist ID in the URL of their Spotify page",
-    "submitButton": "Add Tracks"
+    "sectionDescription": "Select an artist from your library to organize their tracks into playlists by popularity",
+    "searchPlaceholder": "Search artists...",
+    "trackCount": "{count} tracks",
+    "noArtists": "No artists found in your library",
+    "noResults": "No artists match your search",
+    "loadingArtists": "Loading artists...",
+    "submitButton": "Organize Tracks",
+    "selectPrompt": "Select an artist to continue"
   },
   "playlist": {
     "defaultLabel": "Select playlist",
