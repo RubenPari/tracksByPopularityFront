@@ -1,6 +1,7 @@
 <template>
   <button
     class="action-button"
+    :class="tierClass"
     :disabled="disabled || loading"
     @click="$emit('click')"
   >
@@ -22,14 +23,21 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   loading?: boolean
   disabled?: boolean
+  tier?: 'less' | 'less-medium' | 'medium' | 'more-medium' | 'more'
 }>()
 
 defineEmits<{
   click: []
 }>()
+
+const tierClass = computed(() => props.tier ? `tier-${props.tier}` : '')
+</script>
+
+<script lang="ts">
+import { computed } from 'vue'
 </script>
 
 <style scoped>
@@ -58,6 +66,46 @@ defineEmits<{
 .action-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.action-button.tier-less {
+  border-color: var(--color-tier-less);
+}
+.action-button.tier-less:hover:not(:disabled) {
+  border-color: var(--color-tier-less);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
+}
+
+.action-button.tier-less-medium {
+  border-color: var(--color-tier-less-medium);
+}
+.action-button.tier-less-medium:hover:not(:disabled) {
+  border-color: var(--color-tier-less-medium);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.25);
+}
+
+.action-button.tier-medium {
+  border-color: var(--color-tier-medium);
+}
+.action-button.tier-medium:hover:not(:disabled) {
+  border-color: var(--color-tier-medium);
+  box-shadow: 0 4px 16px rgba(234, 179, 8, 0.25);
+}
+
+.action-button.tier-more-medium {
+  border-color: var(--color-tier-more-medium);
+}
+.action-button.tier-more-medium:hover:not(:disabled) {
+  border-color: var(--color-tier-more-medium);
+  box-shadow: 0 4px 16px rgba(132, 204, 22, 0.25);
+}
+
+.action-button.tier-more {
+  border-color: var(--color-tier-more);
+}
+.action-button.tier-more:hover:not(:disabled) {
+  border-color: var(--color-tier-more);
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.25);
 }
 
 .button-content {
