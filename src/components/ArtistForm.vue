@@ -169,6 +169,20 @@ const handleSubmit = async () => {
   color: var(--color-text);
   font-family: inherit;
   font-size: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.artist-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .artist-card:hover {
@@ -176,10 +190,14 @@ const handleSubmit = async () => {
   background: var(--color-background-hover, var(--color-background-soft));
 }
 
+.artist-card:hover::before {
+  opacity: 1;
+}
+
 .artist-card.selected {
   border-color: var(--color-primary);
-  background: rgba(100, 108, 255, 0.1);
-  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.15);
+  background: rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), 0 4px 16px rgba(99, 102, 241, 0.2);
 }
 
 .artist-name {
