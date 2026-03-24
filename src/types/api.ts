@@ -72,6 +72,18 @@ export interface ArtistSummary {
 }
 
 /**
+ * Playlist backup snapshot
+ */
+export interface PlaylistSnapshot {
+  id: string
+  playlistId: string
+  playlistName: string
+  operationType: string
+  createdAt: string
+  trackCount: number
+}
+
+/**
  * Playlist information from Spotify
  */
 export interface PlaylistInfo {

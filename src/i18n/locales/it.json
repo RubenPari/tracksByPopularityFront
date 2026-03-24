@@ -94,5 +94,16 @@
   },
   "language": {
     "switchLabel": "Lingua"
+  },
+  "backup": {
+    "sectionTitle": "Cronologia Backup",
+    "restore": "Ripristina",
+    "restoreConfirm": "Ripristinare la playlist \"{name}\" allo stato precedente?",
+    "restoreSuccess": "Playlist ripristinata con successo",
+    "noSnapshots": "Nessun backup disponibile",
+    "trackCount": "{count} tracce",
+    "operationPopularity": "Popolarità",
+    "operationArtist": "Artista",
+    "loading": "Caricamento backup..."
   }
 }

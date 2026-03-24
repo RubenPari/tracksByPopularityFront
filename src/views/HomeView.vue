@@ -14,7 +14,11 @@
       <div class="divider"></div>
       
       <ArtistForm />
-      
+
+      <div class="divider"></div>
+
+      <BackupPanel />
+
     </main>
 
     <NotificationBanner
@@ -39,6 +43,7 @@ import TrackActions from '@/components/TrackActions.vue'
 import ArtistForm from '@/components/ArtistForm.vue'
 import NotificationBanner from '@/components/NotificationBanner.vue'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import BackupPanel from '@/components/BackupPanel.vue'
 
 const { t } = useI18n()
 const apiStore = useApiStore()
