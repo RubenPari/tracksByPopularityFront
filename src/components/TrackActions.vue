@@ -21,12 +21,15 @@
       <ActionButton
         v-for="config in popularityConfigs"
         :key="config.id"
+        :tier="config.id"
         :loading="loading"
         :disabled="loading || !selections[config.id]"
         @click="handleAddTracks(config.id)"
       >
         <template #icon>{{ config.icon }}</template>
-        <template #title>{{ config.title }}</template>
+        <template #title>
+          <span :class="['tier-label', `tier-label-${config.id}`]">{{ config.title }}</span>
+        </template>
         <template #description>{{ config.description }}</template>
       </ActionButton>
     </div>
@@ -190,5 +193,29 @@ const handleAddTracks = async (id: PopularityCategoryId) => {
   .playlist-selection-section {
     padding: 1rem;
   }
+}
+
+.tier-label {
+  font-weight: 700;
+}
+
+.tier-label-less {
+  color: var(--color-tier-less);
+}
+
+.tier-label-less-medium {
+  color: var(--color-tier-less-medium);
+}
+
+.tier-label-medium {
+  color: var(--color-tier-medium);
+}
+
+.tier-label-more-medium {
+  color: var(--color-tier-more-medium);
+}
+
+.tier-label-more {
+  color: var(--color-tier-more);
 }
 </style>
