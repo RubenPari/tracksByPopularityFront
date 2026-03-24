@@ -41,12 +41,12 @@ defineEmits<{
 }
 
 .notification.success {
-  background: #10b981;
+  background: var(--color-success);
   color: white;
 }
 
 .notification.error {
-  background: #ef4444;
+  background: var(--color-error);
   color: white;
 }
 
