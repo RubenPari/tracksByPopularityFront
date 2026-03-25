@@ -101,3 +101,29 @@ export interface AddTracksByPopularityRequest {
   playlistId: string
 }
 
+/**
+ * User account information
+ */
+export interface User {
+  id: string
+  email: string
+  isEmailVerified: boolean
+  isSpotifyLinked: boolean
+}
+
+/**
+ * Account login response
+ */
+export interface AccountLoginResponse {
+  token: string
+  user: User
+}
+
+/**
+ * Spotify link status
+ */
+export interface SpotifyLinkStatus {
+  isLinked: boolean
+  spotifyUserId?: string
+}
+
