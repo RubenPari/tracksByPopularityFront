@@ -1,13 +1,14 @@
 import { httpClient } from './httpClient'
 import type { ApiResponse, PlaylistSnapshot, TrackResponse } from '@/types/api'
+import { API_ENDPOINTS } from '@/utils/constants'
 
 export class BackupApiService {
   async getSnapshots(): Promise<ApiResponse<PlaylistSnapshot[]>> {
-    return httpClient.get<PlaylistSnapshot[]>('/api/backup/list')
+    return httpClient.get<PlaylistSnapshot[]>(API_ENDPOINTS.BACKUP.LIST)
   }
 
   async restoreSnapshot(snapshotId: string): Promise<ApiResponse<TrackResponse>> {
-    return httpClient.post<TrackResponse>(`/api/backup/restore/${snapshotId}`)
+    return httpClient.post<TrackResponse>(API_ENDPOINTS.BACKUP.RESTORE(snapshotId))
   }
 }
 

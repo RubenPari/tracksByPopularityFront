@@ -7,11 +7,13 @@
  */
 export const API_ENDPOINTS = {
   TRACK: {
-    BASE: '/track',
-    ARTIST: '/track/artist',
+    BASE: '/api/track',
+    POPULARITY: (range: string) => `/api/track/popularity/${range}`,
+    ARTISTS: '/api/track/artists',
+    ARTIST: '/api/track/artist',
   },
   PLAYLIST: {
-    ALL: '/playlist/all',
+    ALL: '/api/playlist/all',
   },
   AUTH: {
     STATUS: '/auth/is-auth',
@@ -21,6 +23,10 @@ export const API_ENDPOINTS = {
   HEALTH: {
     BASE: '/health',
     DETAILED: '/health/detailed',
+  },
+  BACKUP: {
+    LIST: '/api/backup/list',
+    RESTORE: (snapshotId: string) => `/api/backup/restore/${snapshotId}`,
   },
   CLEANUP: {
     DUPLICATES: '/cleanup/duplicates',
