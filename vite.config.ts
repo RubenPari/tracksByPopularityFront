@@ -18,33 +18,15 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    proxy: {
-      // Proxy API requests to backend when running in Docker
-      '/api': {
-        target: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/track': {
-        target: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/playlist': {
-        target: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/auth': {
-        target: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/health': {
-        target: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+    proxy: Object.fromEntries(
+      ['/api', '/track', '/playlist', '/auth', '/health'].map((path) => [
+        path,
+        {
+          target: process.env.VITE_API_BASE_URL || 'http://localhost:8080',
+          changeOrigin: true,
+          secure: false,
+        },
+      ]),
+    ),
   },
 })
