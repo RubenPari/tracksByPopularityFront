@@ -9,7 +9,7 @@
       <div class="icon" v-if="!loading">
         <slot name="icon"></slot>
       </div>
-      <div class="spinner" v-else></div>
+      <div class="spinner spinner-large" v-else></div>
       <div class="text-content">
         <h3 class="title">
           <slot name="title"></slot>
@@ -121,19 +121,7 @@ import { computed } from 'vue'
 }
 
 .spinner {
-  width: 2rem;
-  height: 2rem;
-  border: 3px solid var(--color-border);
-  border-top-color: var(--color-primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
   flex-shrink: 0;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .text-content {
