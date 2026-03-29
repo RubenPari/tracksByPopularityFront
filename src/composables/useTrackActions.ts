@@ -29,10 +29,10 @@ export function useTrackActions() {
    * @param successMessage - The message to display upon success
    * @returns A promise that resolves with the API call result.
    */
-  const addTracksByPopularity = async (playlistId: string, range: string, successMessage: string) => {
-    logger.info(`Adding tracks with ${range} popularity`, { playlistId })
+  const addTracksByPopularity = async (range: string, successMessage: string) => {
+    logger.info(`Adding tracks with ${range} popularity`)
     return apiStore.executeApiCall(
-      () => trackApiService.addTracksByPopularity(playlistId, range),
+      () => trackApiService.addTracksByPopularity(range),
       successMessage
     )
   }
