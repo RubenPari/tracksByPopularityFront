@@ -95,13 +95,6 @@ export interface PlaylistInfo {
 }
 
 /**
- * Request to add tracks by popularity
- */
-export interface AddTracksByPopularityRequest {
-  playlistId: string
-}
-
-/**
  * User account information
  */
 export interface User {

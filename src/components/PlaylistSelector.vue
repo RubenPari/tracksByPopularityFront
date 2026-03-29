@@ -72,7 +72,7 @@ const emit = defineEmits<{
 
 const { playlists, loading, fetchPlaylists } = usePlaylists()
 
-const inputId = computed(() => `playlist-select-${Math.random().toString(36).substr(2, 9)}`)
+const inputId = `playlist-select-${Math.random().toString(36).substr(2, 9)}`
 const hasError = computed(() => !!props.errorMessage)
 
 const handleChange = (event: Event) => {
