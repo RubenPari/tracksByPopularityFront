@@ -179,6 +179,9 @@
     "trackCount": "{count} tracce",
     "operationPopularity": "Popolarità",
     "operationArtist": "Artista",
-    "loading": "Caricamento backup..."
+    "loading": "Caricamento backup...",
+    "delete": "Elimina",
+    "deleteConfirm": "Eliminare il backup di \"{name}\"? Questa azione non può essere annullata.",
+    "deleteSuccess": "Backup eliminato con successo"
   }
 }

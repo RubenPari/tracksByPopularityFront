@@ -179,6 +179,9 @@
     "trackCount": "{count} tracks",
     "operationPopularity": "Popularity",
     "operationArtist": "Artist",
-    "loading": "Loading backups..."
+    "loading": "Loading backups...",
+    "delete": "Delete",
+    "deleteConfirm": "Delete backup of \"{name}\"? This action cannot be undone.",
+    "deleteSuccess": "Backup deleted successfully"
   }
 }

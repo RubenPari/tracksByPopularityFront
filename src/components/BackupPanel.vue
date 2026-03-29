@@ -37,14 +37,25 @@
                 <span class="snapshot-date">{{ formatDate(snapshot.createdAt) }}</span>
               </div>
             </div>
-            <button
-              class="restore-button"
-              :disabled="restoringId !== null"
-              @click="handleRestore(snapshot)"
-            >
-              <span v-if="restoringId === snapshot.id" class="spinner-small"></span>
-              <span v-else>{{ t('backup.restore') }}</span>
-            </button>
+            <div class="snapshot-actions">
+              <button
+                class="restore-button"
+                :disabled="restoringId !== null || deletingId !== null"
+                @click="handleRestore(snapshot)"
+              >
+                <span v-if="restoringId === snapshot.id" class="spinner-small"></span>
+                <span v-else>{{ t('backup.restore') }}</span>
+              </button>
+              <button
+                class="delete-button"
+                :disabled="restoringId !== null || deletingId !== null"
+                @click="handleDelete(snapshot)"
+                :title="t('backup.delete')"
+              >
+                <span v-if="deletingId === snapshot.id" class="spinner-small"></span>
+                <span v-else>🗑️</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -56,6 +67,16 @@
         <div class="confirm-actions">
           <button class="confirm-cancel" @click="showConfirm = false">{{ t('common.close') }}</button>
           <button class="confirm-restore" @click="confirmRestore">{{ t('backup.restore') }}</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showDeleteConfirm" class="confirm-overlay" @click.self="showDeleteConfirm = false">
+      <div class="confirm-dialog">
+        <p>{{ t('backup.deleteConfirm', { name: snapshotToDelete?.playlistName }) }}</p>
+        <div class="confirm-actions">
+          <button class="confirm-cancel" @click="showDeleteConfirm = false">{{ t('common.close') }}</button>
+          <button class="confirm-delete" @click="confirmDelete">{{ t('backup.delete') }}</button>
         </div>
       </div>
     </div>
@@ -71,11 +92,13 @@ import type { PlaylistSnapshot } from '@/types/api'
 
 const { t } = useI18n()
 const apiStore = useApiStore()
-const { snapshots, loadingSnapshots, restoringId, fetchSnapshots, restoreSnapshot } = useBackup()
+const { snapshots, loadingSnapshots, restoringId, deletingId, fetchSnapshots, restoreSnapshot, deleteSnapshot } = useBackup()
 
 const isOpen = ref(false)
 const showConfirm = ref(false)
 const confirmSnapshot = ref<PlaylistSnapshot | null>(null)
+const showDeleteConfirm = ref(false)
+const snapshotToDelete = ref<PlaylistSnapshot | null>(null)
 
 onMounted(() => {
   fetchSnapshots()
@@ -101,6 +124,23 @@ const confirmRestore = async () => {
     apiStore.error = t('errors.genericError')
   }
   confirmSnapshot.value = null
+}
+
+const handleDelete = (snapshot: PlaylistSnapshot) => {
+  snapshotToDelete.value = snapshot
+  showDeleteConfirm.value = true
+}
+
+const confirmDelete = async () => {
+  if (!snapshotToDelete.value) return
+  showDeleteConfirm.value = false
+  const success = await deleteSnapshot(snapshotToDelete.value.id)
+  if (success) {
+    apiStore.success = t('backup.deleteSuccess')
+  } else {
+    apiStore.error = t('errors.genericError')
+  }
+  snapshotToDelete.value = null
 }
 </script>
 
@@ -172,6 +212,12 @@ const confirmRestore = async () => {
   gap: 1rem;
 }
 
+.snapshot-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .snapshot-info {
   display: flex;
   flex-direction: column;
@@ -235,6 +281,33 @@ const confirmRestore = async () => {
   cursor: not-allowed;
 }
 
+.delete-button {
+  padding: 0.5rem;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .confirm-overlay {
   position: fixed;
   inset: 0;
@@ -286,6 +359,20 @@ const confirmRestore = async () => {
   font-weight: 600;
 }
 
+.confirm-delete {
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirm-delete:hover {
+  background: #dc2626;
+}
+
 .collapse-enter-active,
 .collapse-leave-active {
   transition: all 0.3s ease;
@@ -310,8 +397,17 @@ const confirmRestore = async () => {
     align-items: stretch;
   }
 
-  .restore-button {
+  .snapshot-actions {
     width: 100%;
+    justify-content: stretch;
+  }
+
+  .restore-button {
+    flex: 1;
+  }
+
+  .delete-button {
+    flex: 0;
   }
 }
 </style>

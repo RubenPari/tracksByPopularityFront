@@ -10,6 +10,10 @@ export class BackupApiService {
   async restoreSnapshot(snapshotId: string): Promise<ApiResponse<TrackResponse>> {
     return httpClient.post<TrackResponse>(API_ENDPOINTS.BACKUP.RESTORE(snapshotId))
   }
+
+  async deleteSnapshot(snapshotId: string): Promise<ApiResponse<void>> {
+    return httpClient.delete<void>(API_ENDPOINTS.BACKUP.DELETE(snapshotId))
+  }
 }
 
 export const backupApiService = new BackupApiService()

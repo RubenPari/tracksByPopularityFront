@@ -27,6 +27,7 @@ export const API_ENDPOINTS = {
   BACKUP: {
     LIST: '/api/backup/list',
     RESTORE: (snapshotId: string) => `/api/backup/restore/${snapshotId}`,
+    DELETE: (snapshotId: string) => `/api/backup/${snapshotId}`,
   },
   CLEANUP: {
     DUPLICATES: '/cleanup/duplicates',
