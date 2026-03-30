@@ -19,6 +19,11 @@
       <span class="spinner"></span>
       {{ t('artist.loadingArtists') }}
     </div>
+    
+    <div v-else-if="isRevalidating" class="loading-state revalidating">
+      <span class="spinner-small"></span>
+      {{ t('common.refreshing') }}
+    </div>
 
     <div v-else-if="artists.length === 0" class="empty-state">
       {{ t('artist.noArtists') }}
@@ -69,7 +74,6 @@ import { useI18n } from 'vue-i18n'
 import { useApiStore } from '@/stores/api'
 import { useTrackActions } from '@/composables/useTrackActions'
 import { useArtistSelection } from '@/composables/useArtistSelection'
-import { SUCCESS_MESSAGES } from '@/utils/constants'
 
 const { t } = useI18n()
 const apiStore = useApiStore()
@@ -82,6 +86,7 @@ const {
   filteredArtists,
   fetchArtists,
   selectArtist,
+  isRevalidating,
 } = useArtistSelection()
 
 onMounted(() => {
@@ -216,6 +221,11 @@ const handleSubmit = async () => {
 .loading-state {
   padding: 2rem;
   font-size: 1rem;
+}
+
+.loading-state.revalidating {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
 }
 
 .empty-state {

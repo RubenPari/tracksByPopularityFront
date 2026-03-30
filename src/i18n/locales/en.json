@@ -3,6 +3,7 @@
     "close": "Close",
     "retry": "Retry",
     "loading": "Processing...",
+    "refreshing": "Updating...",
     "somethingWentWrong": "Something went wrong",
     "unexpectedError": "An unexpected error occurred",
     "yes": "Yes",

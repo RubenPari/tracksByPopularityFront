@@ -3,6 +3,7 @@
     "close": "Chiudi",
     "retry": "Riprova",
     "loading": "Elaborazione...",
+    "refreshing": "Aggiornamento...",
     "somethingWentWrong": "Qualcosa è andato storto",
     "unexpectedError": "Si è verificato un errore imprevisto",
     "yes": "Sì",
