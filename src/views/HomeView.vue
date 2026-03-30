@@ -10,9 +10,11 @@
 
     <main class="main-content">
       <TrackActions />
-      
+
+      <PopularityPlaylists />
+
       <div class="divider"></div>
-      
+
       <ArtistForm />
 
       <div class="divider"></div>
@@ -44,6 +46,7 @@ import ArtistForm from '@/components/ArtistForm.vue'
 import NotificationBanner from '@/components/NotificationBanner.vue'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import BackupPanel from '@/components/BackupPanel.vue'
+import PopularityPlaylists from '@/components/PopularityPlaylists.vue'
 
 const { t } = useI18n()
 const apiStore = useApiStore()

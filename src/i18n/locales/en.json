@@ -170,6 +170,12 @@
   "language": {
     "switchLabel": "Language"
   },
+  "popularityPlaylists": {
+    "sectionTitle": "Your Popularity Playlists",
+    "trackCount": "{count} tracks",
+    "noPlaylists": "No popularity playlists found. Use the buttons above to create them.",
+    "loading": "Loading playlists..."
+  },
   "backup": {
     "sectionTitle": "Backup History",
     "restore": "Restore",
