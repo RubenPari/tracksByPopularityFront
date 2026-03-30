@@ -1,5 +1,6 @@
 import { ref, type Ref } from 'vue'
 import { deduplicatedRequest, createCacheKey } from './useRequestDeduplication'
+import { loadFromStorage, saveToStorage, clearStorage } from './useLocalStorage'
 
 /**
  * Options for the useCachedApi composable
@@ -45,12 +46,11 @@ export interface UseCachedApiResult<T> {
 const DEFAULT_STALE_TIME = 5 * 60 * 1000
 
 /**
- * Composable implementing SWR (Stale-While-Revalidate) pattern
- * Shows cached data immediately while refreshing in background
+ * Composable implementing SWR (Stale-While-Revalidate) pattern.
+ * Shows cached data immediately while refreshing in background.
  * 
- * @param fetcher - Async function to fetch data
- * @param storageKey - Optional key for localStorage caching
- * @param options - Configuration options
+ * Follows SRP: This composable orchestrates caching logic but delegates
+ * storage, deduplication, and event handling to separate utilities.
  * 
  * @example
  * ```ts
@@ -67,7 +67,6 @@ export function useCachedApi<T>(
   options: UseCachedApiOptions<T> = {}
 ): UseCachedApiResult<T> {
   const {
-    storageKey: configStorageKey,
     staleTime = DEFAULT_STALE_TIME,
     revalidateOnFocus = true,
     revalidateOnReconnect = true,
@@ -75,9 +74,7 @@ export function useCachedApi<T>(
     transform
   } = options
 
-  const finalStorageKey = storageKey || configStorageKey
-
-  // State
+  // State (SRP: state management is the composable's responsibility)
   const data = ref<T | null>(null) as Ref<T | null>
   const loading = ref(false)
   const error = ref<Error | null>(null)
@@ -93,52 +90,11 @@ export function useCachedApi<T>(
   }
 
   /**
-   * Load data from localStorage cache
-   */
-  const loadFromStorage = (): T | null => {
-    if (!finalStorageKey) return null
-    
-    try {
-      const cached = localStorage.getItem(finalStorageKey)
-      if (!cached) return null
-      
-      const parsed = JSON.parse(cached) as { data: T; timestamp: number }
-      
-      // Check if cache is expired
-      if (Date.now() - parsed.timestamp > staleTime) {
-        localStorage.removeItem(finalStorageKey)
-        return null
-      }
-      
-      return transform ? transform(parsed.data) : parsed.data
-    } catch {
-      return null
-    }
-  }
-
-  /**
-   * Save data to localStorage cache
-   */
-  const saveToStorage = (newData: T): void => {
-    if (!finalStorageKey) return
-    
-    try {
-      const toCache = {
-        data: newData,
-        timestamp: Date.now()
-      }
-      localStorage.setItem(finalStorageKey, JSON.stringify(toCache))
-    } catch {
-      // localStorage might be full or unavailable
-    }
-  }
-
-  /**
    * Clear localStorage cache
    */
   const clearCache = (): void => {
-    if (finalStorageKey) {
-      localStorage.removeItem(finalStorageKey)
+    if (storageKey) {
+      clearStorage(storageKey)
     }
   }
 
@@ -154,8 +110,8 @@ export function useCachedApi<T>(
     try {
       // Use deduplicated request if storage key is provided
       let freshData: T
-      if (finalStorageKey) {
-        const cacheKey = createCacheKey('api', finalStorageKey)
+      if (storageKey) {
+        const cacheKey = createCacheKey('api', storageKey)
         freshData = await deduplicatedRequest(cacheKey, fetcher)
       } else {
         freshData = await fetcher()
@@ -163,7 +119,11 @@ export function useCachedApi<T>(
       
       data.value = freshData
       lastUpdated.value = Date.now()
-      saveToStorage(freshData)
+      
+      // Save to localStorage (SRP: delegation to storage utility)
+      if (storageKey) {
+        saveToStorage(storageKey, freshData)
+      }
     } catch (err) {
       error.value = err instanceof Error ? err : new Error('Unknown error')
       
@@ -215,48 +175,49 @@ export function useCachedApi<T>(
    * Initialize - load from cache first, then revalidate
    */
   const init = async (): Promise<void> => {
-    // Load from localStorage first for instant display
-    const cachedData = loadFromStorage()
-    if (cachedData) {
-      data.value = cachedData
-      lastUpdated.value = Date.now()
-      
-      // Revalidate in background
-      if (isCacheValid()) {
-        revalidate()
-      } else {
-        await fetchData(false)
+    // Load from localStorage first for instant display (SRP: delegation)
+    if (storageKey) {
+      const cachedData = loadFromStorage<T>(storageKey, staleTime)
+      if (cachedData) {
+        data.value = transform ? transform(cachedData) : cachedData
+        lastUpdated.value = Date.now()
+        
+        // Revalidate in background
+        if (isCacheValid()) {
+          revalidate()
+        } else {
+          await fetchData(false)
+        }
+        return
       }
-    } else {
-      // No cache, fetch from API
-      await fetchData(false)
     }
+    
+    // No cache, fetch from API
+    await fetchData(false)
   }
 
-  // Set up focus revalidation
+  // Set up focus revalidation (OCP: easy to add new event handlers)
   if (revalidateOnFocus && typeof window !== 'undefined') {
     const handleVisibilityChange = (): void => {
-      if (document.visibilityState === 'visible' && data.value) {
+      if (document.visibilityState === 'visible' && data.value && isCacheValid()) {
         revalidate()
       }
     }
 
     const handleFocus = (): void => {
-      if (data.value) {
+      if (data.value && isCacheValid()) {
         revalidate()
       }
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
     window.addEventListener('focus', handleFocus)
-
-    // Cleanup is handled by Vue's onUnmounted if used in component
   }
 
-  // Set up reconnect revalidation
+  // Set up reconnect revalidation (OCP)
   if (revalidateOnReconnect && typeof window !== 'undefined') {
     const handleOnline = (): void => {
-      if (data.value) {
+      if (data.value && isCacheValid()) {
         revalidate()
       }
     }
@@ -279,15 +240,12 @@ export function useCachedApi<T>(
 }
 
 /**
- * Version key for cache schema
- */
-const CACHE_VERSION_KEY = 'cache_version'
-const CURRENT_CACHE_VERSION = 1
-
-/**
  * Clear all app caches
  */
 export function clearAllCaches(): void {
+  const CACHE_VERSION_KEY = 'cache_version'
+  const CURRENT_CACHE_VERSION = 1
+  
   // Update cache version to invalidate all old caches
   localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION.toString())
   
@@ -306,6 +264,9 @@ export function clearAllCaches(): void {
  * Initialize cache versioning
  */
 export function initCacheVersioning(): void {
+  const CACHE_VERSION_KEY = 'cache_version'
+  const CURRENT_CACHE_VERSION = 1
+  
   const storedVersion = localStorage.getItem(CACHE_VERSION_KEY)
   if (!storedVersion || parseInt(storedVersion, 10) < CURRENT_CACHE_VERSION) {
     clearAllCaches()
