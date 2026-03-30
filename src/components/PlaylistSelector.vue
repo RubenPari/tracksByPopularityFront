@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { usePlaylists } from '@/composables/usePlaylists'
+import { usePlaylistsWithCache } from '@/composables/usePlaylistsWithCache'
 
 interface Props {
   modelValue: string
@@ -70,7 +70,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
-const { playlists, loading, fetchPlaylists } = usePlaylists()
+const { playlists, loading, forceRefresh } = usePlaylistsWithCache()
 
 const inputId = `playlist-select-${Math.random().toString(36).substr(2, 9)}`
 const hasError = computed(() => !!props.errorMessage)
@@ -81,12 +81,12 @@ const handleChange = (event: Event) => {
 }
 
 const refreshPlaylists = async () => {
-  await fetchPlaylists()
+  await forceRefresh()
 }
 
 onMounted(() => {
   if (playlists.value.length === 0) {
-    fetchPlaylists()
+    forceRefresh()
   }
 })
 </script>

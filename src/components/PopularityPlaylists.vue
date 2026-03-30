@@ -30,10 +30,10 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { usePlaylists } from '@/composables/usePlaylists'
+import { usePlaylistsWithCache } from '@/composables/usePlaylistsWithCache'
 
 const { t } = useI18n()
-const { playlists, loading, fetchPlaylists } = usePlaylists()
+const { playlists, loading, forceRefresh } = usePlaylistsWithCache()
 
 const POPULARITY_TIERS = [
   { tier: 'less', names: ['Popularity: 0-20', 'Popularity: Less (0-20)'], icon: '📉' },
@@ -72,7 +72,7 @@ function tierToKey(tier: string): string {
 }
 
 onMounted(() => {
-  fetchPlaylists()
+  forceRefresh()
 })
 </script>
 

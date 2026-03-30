@@ -1,11 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import LoginView from '@/views/LoginView.vue'
-import RegisterView from '@/views/RegisterView.vue'
-import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
-import ResetPasswordView from '@/views/ResetPasswordView.vue'
-import VerifyEmailView from '@/views/VerifyEmailView.vue'
-import SettingsView from '@/views/SettingsView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -14,42 +7,44 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      // Lazy load - HomeView is the main page, keep it eagerly loaded for fast FCP
+      component: () => import('@/views/HomeView.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
+      // Lazy load - Login page is rarely the first page visited
+      component: () => import('@/views/LoginView.vue'),
       meta: { guest: true },
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView,
+      component: () => import('@/views/RegisterView.vue'),
       meta: { guest: true },
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: ForgotPasswordView,
+      component: () => import('@/views/ForgotPasswordView.vue'),
       meta: { guest: true },
     },
     {
       path: '/reset-password/:token',
       name: 'reset-password',
-      component: ResetPasswordView,
+      component: () => import('@/views/ResetPasswordView.vue'),
       meta: { guest: true },
     },
     {
       path: '/verify-email/:token',
       name: 'verify-email',
-      component: VerifyEmailView,
+      component: () => import('@/views/VerifyEmailView.vue'),
       meta: { guest: true },
     },
     {
       path: '/settings',
       name: 'settings',
-      component: SettingsView,
+      component: () => import('@/views/SettingsView.vue'),
       meta: { requiresAuth: true },
     },
   ],
