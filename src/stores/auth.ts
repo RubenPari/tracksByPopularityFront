@@ -36,6 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
     spotifyLinked.value = false
     localStorage.removeItem(TOKEN_KEY)
     localStorage.removeItem(USER_KEY)
+    localStorage.removeItem('spotify_user_id')
   }
 
   const login = async (email: string, password: string) => {

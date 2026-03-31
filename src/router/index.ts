@@ -42,6 +42,18 @@ const router = createRouter({
       meta: { guest: true },
     },
     {
+      path: '/auth/callback',
+      name: 'spotify-callback',
+      component: () => import('@/views/HomeView.vue'),
+      beforeEnter: (to, _from, next) => {
+        const spotifyUserId = to.query.spotify_user_id as string
+        if (spotifyUserId) {
+          localStorage.setItem('spotify_user_id', spotifyUserId)
+        }
+        next({ name: 'home', replace: true })
+      },
+    },
+    {
       path: '/settings',
       name: 'settings',
       component: () => import('@/views/SettingsView.vue'),

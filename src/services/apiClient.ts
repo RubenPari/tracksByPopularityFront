@@ -23,6 +23,11 @@ apiClient.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`
   }
 
+  const spotifyUserId = localStorage.getItem('spotify_user_id')
+  if (spotifyUserId) {
+    config.headers['X-Spotify-User-Id'] = spotifyUserId
+  }
+
   return config
 })
 
