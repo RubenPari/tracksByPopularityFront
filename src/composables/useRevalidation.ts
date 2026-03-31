@@ -31,11 +31,11 @@ export interface UseRevalidationResult {
  * Manages revalidation logic following SRP.
  */
 export function useRevalidation(options: UseRevalidationOptions): UseRevalidationResult {
-  const { 
-    staleTime, 
-    revalidateOnFocus = true, 
-    revalidateOnReconnect = true, 
-    onRevalidating 
+  const {
+    staleTime,
+    revalidateOnFocus = true,
+    revalidateOnReconnect = true,
+    onRevalidating,
   } = options
 
   const isRevalidating = ref(false)
@@ -49,7 +49,7 @@ export function useRevalidation(options: UseRevalidationOptions): UseRevalidatio
   const revalidate = (refresh: () => Promise<void>): void => {
     // Don't revalidate if already revalidating
     if (isRevalidating.value) return
-    
+
     // If data is stale, refresh immediately
     if (isCacheStale()) {
       forceRefresh(refresh)
@@ -59,7 +59,7 @@ export function useRevalidation(options: UseRevalidationOptions): UseRevalidatio
     // Otherwise, do background refresh
     isRevalidating.value = true
     onRevalidating?.(true)
-    
+
     // Don't await - let it run in background
     refresh().finally(() => {
       isRevalidating.value = false
@@ -71,7 +71,7 @@ export function useRevalidation(options: UseRevalidationOptions): UseRevalidatio
   const forceRefresh = async (refresh: () => Promise<void>): Promise<void> => {
     isRevalidating.value = true
     onRevalidating?.(true)
-    
+
     try {
       await refresh()
       lastUpdated = Date.now()
@@ -119,6 +119,6 @@ export function useRevalidation(options: UseRevalidationOptions): UseRevalidatio
     isRevalidating,
     isCacheStale,
     revalidate,
-    forceRefresh
+    forceRefresh,
   }
 }

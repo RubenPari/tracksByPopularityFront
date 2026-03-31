@@ -52,40 +52,40 @@ const popularityConfigs = computed<PopularityConfig[]>(() => [
     icon: '📉',
     title: t('tracks.popularity.less.title'),
     description: t('tracks.popularity.less.description'),
-    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_LESS
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_LESS,
   },
   {
     id: 'less-medium',
     icon: '📊',
     title: t('tracks.popularity.lessMedium.title'),
     description: t('tracks.popularity.lessMedium.description'),
-    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_LESS_MEDIUM
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_LESS_MEDIUM,
   },
   {
     id: 'medium',
     icon: '📈',
     title: t('tracks.popularity.medium.title'),
     description: t('tracks.popularity.medium.description'),
-    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MEDIUM
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MEDIUM,
   },
   {
     id: 'more-medium',
     icon: '🔥',
     title: t('tracks.popularity.moreMedium.title'),
     description: t('tracks.popularity.moreMedium.description'),
-    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MORE_MEDIUM
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MORE_MEDIUM,
   },
   {
     id: 'more',
     icon: '⭐',
     title: t('tracks.popularity.more.title'),
     description: t('tracks.popularity.more.description'),
-    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MORE
-  }
+    successMessageKey: SUCCESS_MESSAGES.TRACKS_ADDED_MORE,
+  },
 ])
 
 const handleAddTracks = async (id: PopularityCategoryId) => {
-  const config = popularityConfigs.value.find(c => c.id === id)
+  const config = popularityConfigs.value.find((c) => c.id === id)
   if (!config) return
 
   await addTracksByPopularity(id, config.successMessageKey)
@@ -120,8 +120,6 @@ const handleAddTracks = async (id: PopularityCategoryId) => {
   .actions-grid {
     grid-template-columns: 1fr;
   }
-
-
 }
 
 .tier-label {

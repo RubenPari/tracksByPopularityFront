@@ -16,7 +16,7 @@ export class HttpClient {
    */
   async request<T = unknown>(
     endpoint: string,
-    options: { method: string; data?: unknown }
+    options: { method: string; data?: unknown },
   ): Promise<ApiResponse<T>> {
     const { method, data } = options
     logger.debug(`Making ${method} request to ${endpoint}`, { options })
@@ -97,4 +97,3 @@ export class HttpClient {
 }
 
 export const httpClient = new HttpClient()
-

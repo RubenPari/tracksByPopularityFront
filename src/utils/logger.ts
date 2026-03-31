@@ -63,13 +63,14 @@ class AppLogger implements Logger {
 
   error(message: string, error?: Error | unknown, ...args: unknown[]): void {
     if (this.shouldLog(LogLevel.ERROR)) {
-      const errorDetails = error instanceof Error 
-        ? { message: error.message, stack: error.stack, name: error.name }
-        : error
-      
+      const errorDetails =
+        error instanceof Error
+          ? { message: error.message, stack: error.stack, name: error.name }
+          : error
+
       console.error(
         this.formatMessage('ERROR', message, ...args),
-        errorDetails ? { error: errorDetails } : ''
+        errorDetails ? { error: errorDetails } : '',
       )
     }
   }
@@ -88,7 +89,4 @@ export function createLogger(context: string, minLevel: LogLevel = LogLevel.INFO
 /**
  * Default application logger
  */
-export const logger = createLogger('App', 
-  import.meta.env.DEV ? LogLevel.DEBUG : LogLevel.INFO
-)
-
+export const logger = createLogger('App', import.meta.env.DEV ? LogLevel.DEBUG : LogLevel.INFO)

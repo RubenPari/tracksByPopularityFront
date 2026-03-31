@@ -48,10 +48,10 @@ const DEFAULT_STALE_TIME = 5 * 60 * 1000
 /**
  * Composable implementing SWR (Stale-While-Revalidate) pattern.
  * Shows cached data immediately while refreshing in background.
- * 
+ *
  * Follows SRP: This composable orchestrates caching logic but delegates
  * storage, deduplication, and event handling to separate utilities.
- * 
+ *
  * @example
  * ```ts
  * const { data, loading, refresh } = useCachedApi(
@@ -64,14 +64,14 @@ const DEFAULT_STALE_TIME = 5 * 60 * 1000
 export function useCachedApi<T>(
   fetcher: () => Promise<T>,
   storageKey?: string,
-  options: UseCachedApiOptions<T> = {}
+  options: UseCachedApiOptions<T> = {},
 ): UseCachedApiResult<T> {
   const {
     staleTime = DEFAULT_STALE_TIME,
     revalidateOnFocus = true,
     revalidateOnReconnect = true,
     onRevalidating,
-    transform
+    transform,
   } = options
 
   // State (SRP: state management is the composable's responsibility)
@@ -116,17 +116,17 @@ export function useCachedApi<T>(
       } else {
         freshData = await fetcher()
       }
-      
+
       data.value = freshData
       lastUpdated.value = Date.now()
-      
+
       // Save to localStorage (SRP: delegation to storage utility)
       if (storageKey) {
         saveToStorage(storageKey, freshData)
       }
     } catch (err) {
       error.value = err instanceof Error ? err : new Error('Unknown error')
-      
+
       // If background refresh fails, don't clear current data
       if (!isBackgroundRefresh) {
         throw err
@@ -145,7 +145,7 @@ export function useCachedApi<T>(
   const revalidate = async (): Promise<void> => {
     // Don't revalidate if already revalidating
     if (isRevalidating.value) return
-    
+
     // If data is stale, refresh immediately
     if (!isCacheValid()) {
       await refresh()
@@ -155,7 +155,7 @@ export function useCachedApi<T>(
     // Otherwise, do background refresh
     isRevalidating.value = true
     onRevalidating?.(true)
-    
+
     // Don't await - let it run in background
     fetchData(true).catch(() => {
       // Background refresh failed, keep showing stale data
@@ -181,7 +181,7 @@ export function useCachedApi<T>(
       if (cachedData) {
         data.value = transform ? transform(cachedData) : cachedData
         lastUpdated.value = Date.now()
-        
+
         // Revalidate in background
         if (isCacheValid()) {
           revalidate()
@@ -191,7 +191,7 @@ export function useCachedApi<T>(
         return
       }
     }
-    
+
     // No cache, fetch from API
     await fetchData(false)
   }
@@ -235,7 +235,7 @@ export function useCachedApi<T>(
     isRevalidating,
     lastUpdated,
     refresh,
-    clearCache
+    clearCache,
   }
 }
 
@@ -245,10 +245,10 @@ export function useCachedApi<T>(
 export function clearAllCaches(): void {
   const CACHE_VERSION_KEY = 'cache_version'
   const CURRENT_CACHE_VERSION = 1
-  
+
   // Update cache version to invalidate all old caches
   localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION.toString())
-  
+
   // Clear all caches with old version
   const keysToRemove: string[] = []
   for (let i = 0; i < localStorage.length; i++) {
@@ -257,7 +257,7 @@ export function clearAllCaches(): void {
       keysToRemove.push(key)
     }
   }
-  keysToRemove.forEach(key => localStorage.removeItem(key))
+  keysToRemove.forEach((key) => localStorage.removeItem(key))
 }
 
 /**
@@ -266,7 +266,7 @@ export function clearAllCaches(): void {
 export function initCacheVersioning(): void {
   const CACHE_VERSION_KEY = 'cache_version'
   const CURRENT_CACHE_VERSION = 1
-  
+
   const storedVersion = localStorage.getItem(CACHE_VERSION_KEY)
   if (!storedVersion || parseInt(storedVersion, 10) < CURRENT_CACHE_VERSION) {
     clearAllCaches()

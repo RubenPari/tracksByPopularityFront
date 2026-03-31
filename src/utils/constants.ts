@@ -100,4 +100,3 @@ export const UI = {
   NOTIFICATION_DURATION: 5000, // 5 seconds
   DEBOUNCE_DELAY: 300, // 300ms
 } as const
-

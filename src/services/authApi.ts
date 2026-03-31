@@ -1,10 +1,5 @@
 import { httpClient } from './httpClient'
-import type {
-  ApiResponse,
-  AuthStatusResponse,
-  LoginResponse,
-  CallbackResponse,
-} from '@/types/api'
+import type { ApiResponse, AuthStatusResponse, LoginResponse, CallbackResponse } from '@/types/api'
 import { API_ENDPOINTS } from '@/utils/constants'
 
 /**
@@ -29,9 +24,10 @@ export class AuthApiService {
    * Handles the OAuth callback
    */
   async handleCallback(code: string): Promise<ApiResponse<CallbackResponse>> {
-    return httpClient.get<CallbackResponse>(`${API_ENDPOINTS.AUTH.CALLBACK}?code=${encodeURIComponent(code)}`)
+    return httpClient.get<CallbackResponse>(
+      `${API_ENDPOINTS.AUTH.CALLBACK}?code=${encodeURIComponent(code)}`,
+    )
   }
 }
 
 export const authApiService = new AuthApiService()
-

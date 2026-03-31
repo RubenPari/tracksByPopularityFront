@@ -29,7 +29,7 @@ export class TrackApiService {
    */
   async addTracksByArtist(artistId: string): Promise<ApiResponse<TrackResponse>> {
     return httpClient.post<TrackResponse>(
-      `${API_ENDPOINTS.TRACK.ARTIST}?artistId=${encodeURIComponent(artistId)}`
+      `${API_ENDPOINTS.TRACK.ARTIST}?artistId=${encodeURIComponent(artistId)}`,
     )
   }
 }

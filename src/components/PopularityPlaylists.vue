@@ -20,7 +20,9 @@
         <span class="card-icon">{{ item.icon }}</span>
         <div class="card-info">
           <span class="card-name">{{ item.label }}</span>
-          <span class="card-tracks">{{ t('popularityPlaylists.trackCount', { count: item.totalTracks }) }}</span>
+          <span class="card-tracks">{{
+            t('popularityPlaylists.trackCount', { count: item.totalTracks })
+          }}</span>
         </div>
       </div>
     </div>
@@ -37,36 +39,40 @@ const { playlists, loading, forceRefresh } = usePlaylistsWithCache()
 
 const POPULARITY_TIERS = [
   { tier: 'less', names: ['Popularity: 0-20', 'Popularity: Less (0-20)'], icon: '📉' },
-  { tier: 'less-medium', names: ['Popularity: 21-40', 'Popularity: Less Medium (21-40)'], icon: '📊' },
+  {
+    tier: 'less-medium',
+    names: ['Popularity: 21-40', 'Popularity: Less Medium (21-40)'],
+    icon: '📊',
+  },
   { tier: 'medium', names: ['Popularity: 41-60', 'Popularity: Medium (41-60)'], icon: '📈' },
-  { tier: 'more-medium', names: ['Popularity: 61-80', 'Popularity: 41-80', 'Popularity: More Medium (61-80)'], icon: '🔥' },
+  {
+    tier: 'more-medium',
+    names: ['Popularity: 61-80', 'Popularity: 41-80', 'Popularity: More Medium (61-80)'],
+    icon: '🔥',
+  },
   { tier: 'more', names: ['Popularity: 81-100', 'Popularity: More (81-100)'], icon: '⭐' },
 ] as const
 
 const popularityPlaylists = computed(() => {
-  return POPULARITY_TIERS
-    .map(tier => {
-      const playlist = playlists.value.find(p =>
-        tier.names.some(name => p.name === name)
-      )
-      if (!playlist) return null
-      return {
-        tier: tier.tier,
-        icon: tier.icon,
-        label: t(`tracks.popularity.${tierToKey(tier.tier)}.title`),
-        totalTracks: playlist.totalTracks,
-      }
-    })
-    .filter((item): item is NonNullable<typeof item> => item !== null)
+  return POPULARITY_TIERS.map((tier) => {
+    const playlist = playlists.value.find((p) => tier.names.some((name) => p.name === name))
+    if (!playlist) return null
+    return {
+      tier: tier.tier,
+      icon: tier.icon,
+      label: t(`tracks.popularity.${tierToKey(tier.tier)}.title`),
+      totalTracks: playlist.totalTracks,
+    }
+  }).filter((item): item is NonNullable<typeof item> => item !== null)
 })
 
 function tierToKey(tier: string): string {
   const map: Record<string, string> = {
-    'less': 'less',
+    less: 'less',
     'less-medium': 'lessMedium',
-    'medium': 'medium',
+    medium: 'medium',
     'more-medium': 'moreMedium',
-    'more': 'more',
+    more: 'more',
   }
   return map[tier] ?? tier
 }

@@ -20,7 +20,6 @@
       <div class="divider"></div>
 
       <BackupPanel />
-
     </main>
 
     <NotificationBanner

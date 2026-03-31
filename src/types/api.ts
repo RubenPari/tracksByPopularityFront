@@ -119,4 +119,3 @@ export interface SpotifyLinkStatus {
   isLinked: boolean
   spotifyUserId?: string
 }
-

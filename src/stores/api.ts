@@ -20,7 +20,7 @@ export const useApiStore = defineStore('api', () => {
    */
   const executeApiCall = async <T = unknown>(
     apiCall: () => Promise<ApiResponse<T>>,
-    successMessage?: string
+    successMessage?: string,
   ) => {
     loading.value = true
     error.value = null
@@ -33,7 +33,9 @@ export const useApiStore = defineStore('api', () => {
       const response = await apiCall()
 
       if (response.success) {
-        const message = successMessage ? t(successMessage) : response.message || t(SUCCESS_MESSAGES.OPERATION_SUCCESS)
+        const message = successMessage
+          ? t(successMessage)
+          : response.message || t(SUCCESS_MESSAGES.OPERATION_SUCCESS)
         success.value = message
         logger.info('API call succeeded', { message })
         return { success: true, data: response.data, message: response.message }
@@ -44,8 +46,7 @@ export const useApiStore = defineStore('api', () => {
         return { success: false, error: response.error }
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : t(ERROR_MESSAGES.UNKNOWN_ERROR)
+      const errorMessage = err instanceof Error ? err.message : t(ERROR_MESSAGES.UNKNOWN_ERROR)
       error.value = errorMessage
       logger.error('API call exception', err)
       return { success: false, error: errorMessage }

@@ -267,7 +267,7 @@ const handleSpotifyLogin = async () => {
 .spotify-button {
   width: 100%;
   padding: 0.875rem 1.5rem;
-  background: #1DB954;
+  background: #1db954;
   color: white;
   border: none;
   border-radius: 8px;

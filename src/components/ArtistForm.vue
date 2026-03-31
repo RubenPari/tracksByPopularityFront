@@ -19,7 +19,7 @@
       <span class="spinner"></span>
       {{ t('artist.loadingArtists') }}
     </div>
-    
+
     <div v-else-if="isRevalidating" class="loading-state revalidating">
       <span class="spinner-small"></span>
       {{ t('common.refreshing') }}
@@ -53,11 +53,7 @@
 
     <div class="submit-section">
       <p v-if="!selectedArtist" class="select-prompt">{{ t('artist.selectPrompt') }}</p>
-      <button
-        class="submit-button"
-        :disabled="!selectedArtist || loading"
-        @click="handleSubmit"
-      >
+      <button class="submit-button" :disabled="!selectedArtist || loading" @click="handleSubmit">
         <span v-if="!loading">{{ t('artist.submitButton') }}</span>
         <span v-else class="button-loading">
           <span class="spinner-small"></span>
@@ -202,7 +198,9 @@ const handleSubmit = async () => {
 .artist-card.selected {
   border-color: var(--color-primary);
   background: rgba(99, 102, 241, 0.1);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), 0 4px 16px rgba(99, 102, 241, 0.2);
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.15),
+    0 4px 16px rgba(99, 102, 241, 0.2);
 }
 
 .artist-name {

@@ -14,12 +14,12 @@ const CACHE_STALE_TIME = 5 * 60 * 1000 // 5 minutes
 /**
  * Composable for managing user playlists with caching support.
  * Uses SWR (Stale-While-Revalidate) pattern for optimal UX.
- * 
+ *
  * Benefits:
  * - Shows cached data immediately for fast UI rendering
  * - Refreshes data in background for fresh content
  * - Persists cache in localStorage for even faster subsequent loads
- * 
+ *
  * @example
  * ```vue
  * <script setup>
@@ -35,24 +35,24 @@ export function usePlaylistsWithCache() {
     isRevalidating,
     lastUpdated,
     refresh,
-    clearCache
+    clearCache,
   } = useCachedApi<PlaylistInfo[]>(
     async () => {
       logger.info('Fetching playlists from API')
       const response = await playlistApiService.getAllPlaylists()
-      
+
       if (response.success && response.data) {
         return response.data
       }
-      
+
       throw new Error(response.error || 'Failed to fetch playlists')
     },
     'playlists-cache',
     {
       staleTime: CACHE_STALE_TIME,
       revalidateOnFocus: true,
-      revalidateOnReconnect: true
-    }
+      revalidateOnReconnect: true,
+    },
   )
 
   // Use module-level cache for shared state
@@ -96,7 +96,7 @@ export function usePlaylistsWithCache() {
     /** Clear local cache */
     clearCache,
     /** Whether the cache is stale */
-    isCacheStale
+    isCacheStale,
   }
 }
 
@@ -116,6 +116,6 @@ export function useCachedPlaylists(): {
     playlists,
     loading,
     isRevalidating,
-    forceRefresh
+    forceRefresh,
   }
 }

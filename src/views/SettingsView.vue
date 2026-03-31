@@ -427,7 +427,7 @@ const handleLogout = async () => {
 }
 
 .spotify-button {
-  background: #1DB954;
+  background: #1db954;
   color: white;
 }
 

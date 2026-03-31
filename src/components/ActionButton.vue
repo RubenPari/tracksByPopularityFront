@@ -33,7 +33,7 @@ defineEmits<{
   click: []
 }>()
 
-const tierClass = computed(() => props.tier ? `tier-${props.tier}` : '')
+const tierClass = computed(() => (props.tier ? `tier-${props.tier}` : ''))
 </script>
 
 <script lang="ts">

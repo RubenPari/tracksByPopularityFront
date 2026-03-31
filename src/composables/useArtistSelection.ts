@@ -11,7 +11,7 @@ const subscribers = new Set<(artists: ArtistSummary[]) => void>()
  */
 const notifySubscribers = (artists: ArtistSummary[]): void => {
   currentArtists = artists
-  subscribers.forEach(callback => callback(artists))
+  subscribers.forEach((callback) => callback(artists))
 }
 
 export function useArtistSelection() {
@@ -20,7 +20,7 @@ export function useArtistSelection() {
     loading: artistsLoading,
     isRevalidating,
     refresh,
-    clearCache
+    clearCache,
   } = useCachedArtists()
 
   const artists = ref<ArtistSummary[]>(currentArtists)
@@ -36,12 +36,16 @@ export function useArtistSelection() {
   subscribers.add(handleCacheUpdate)
 
   // Watch for cache changes
-  watch(cachedArtists, (newArtists) => {
-    if (newArtists.length > 0) {
-      artists.value = newArtists
-      notifySubscribers(newArtists)
-    }
-  }, { immediate: true })
+  watch(
+    cachedArtists,
+    (newArtists) => {
+      if (newArtists.length > 0) {
+        artists.value = newArtists
+        notifySubscribers(newArtists)
+      }
+    },
+    { immediate: true },
+  )
 
   // Watch for loading state changes
   watch(artistsLoading, (isLoading) => {
@@ -51,7 +55,7 @@ export function useArtistSelection() {
   const filteredArtists = computed(() => {
     if (!searchQuery.value.trim()) return artists.value
     const query = searchQuery.value.toLowerCase()
-    return artists.value.filter(a => a.name.toLowerCase().includes(query))
+    return artists.value.filter((a) => a.name.toLowerCase().includes(query))
   })
 
   const fetchArtists = async () => {
@@ -77,6 +81,6 @@ export function useArtistSelection() {
     fetchArtists,
     selectArtist,
     isRevalidating,
-    clearCache
+    clearCache,
   }
 }

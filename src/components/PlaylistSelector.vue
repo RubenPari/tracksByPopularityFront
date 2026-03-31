@@ -14,11 +14,7 @@
         :class="{ 'has-error': hasError }"
       >
         <option value="" disabled>{{ displayPlaceholder }}</option>
-        <option
-          v-for="playlist in playlists"
-          :key="playlist.id"
-          :value="playlist.id"
-        >
+        <option v-for="playlist in playlists" :key="playlist.id" :value="playlist.id">
           {{ playlist.name }} ({{ t('playlist.trackCount', { count: playlist.totalTracks }) }})
         </option>
       </select>
@@ -186,4 +182,3 @@ onMounted(() => {
   font-size: 0.875rem;
 }
 </style>
-

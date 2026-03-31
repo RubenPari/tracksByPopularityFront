@@ -13,8 +13,6 @@ export class PlaylistApiService {
   async getAllPlaylists(): Promise<ApiResponse<PlaylistInfo[]>> {
     return httpClient.get<PlaylistInfo[]>(API_ENDPOINTS.PLAYLIST.ALL)
   }
-
 }
 
 export const playlistApiService = new PlaylistApiService()
-

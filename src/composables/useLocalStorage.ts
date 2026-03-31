@@ -10,15 +10,15 @@ export function loadFromStorage<T>(key: string, staleTime: number): T | null {
   try {
     const cached = localStorage.getItem(key)
     if (!cached) return null
-    
+
     const parsed = JSON.parse(cached) as { data: T; timestamp: number }
-    
+
     // Check if cache is expired
     if (Date.now() - parsed.timestamp > staleTime) {
       localStorage.removeItem(key)
       return null
     }
-    
+
     return parsed.data
   } catch {
     return null
@@ -32,7 +32,7 @@ export function saveToStorage<T>(key: string, data: T): void {
   try {
     const toCache = {
       data,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
     localStorage.setItem(key, JSON.stringify(toCache))
   } catch {
@@ -53,10 +53,10 @@ export function clearStorage(key: string): void {
 export function clearAllStorageCaches(): void {
   const CACHE_VERSION_KEY = 'cache_version'
   const CURRENT_CACHE_VERSION = 1
-  
+
   // Update cache version to invalidate all old caches
   localStorage.setItem(CACHE_VERSION_KEY, CURRENT_CACHE_VERSION.toString())
-  
+
   // Clear all caches with old version
   const keysToRemove: string[] = []
   for (let i = 0; i < localStorage.length; i++) {
@@ -65,7 +65,7 @@ export function clearAllStorageCaches(): void {
       keysToRemove.push(key)
     }
   }
-  keysToRemove.forEach(key => localStorage.removeItem(key))
+  keysToRemove.forEach((key) => localStorage.removeItem(key))
 }
 
 /**
@@ -74,7 +74,7 @@ export function clearAllStorageCaches(): void {
 export function initStorageVersioning(): void {
   const CACHE_VERSION_KEY = 'cache_version'
   const CURRENT_CACHE_VERSION = 1
-  
+
   const storedVersion = localStorage.getItem(CACHE_VERSION_KEY)
   if (!storedVersion || parseInt(storedVersion, 10) < CURRENT_CACHE_VERSION) {
     clearAllStorageCaches()

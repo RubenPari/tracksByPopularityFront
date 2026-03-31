@@ -20,19 +20,21 @@
         </div>
 
         <div v-else class="snapshot-list">
-          <div
-            v-for="snapshot in snapshots"
-            :key="snapshot.id"
-            class="snapshot-item"
-          >
+          <div v-for="snapshot in snapshots" :key="snapshot.id" class="snapshot-item">
             <div class="snapshot-info">
               <span class="snapshot-name">{{ snapshot.playlistName }}</span>
               <div class="snapshot-meta">
                 <span class="snapshot-type">
-                  {{ snapshot.operationType === 'popularity' ? t('backup.operationPopularity') : t('backup.operationArtist') }}
+                  {{
+                    snapshot.operationType === 'popularity'
+                      ? t('backup.operationPopularity')
+                      : t('backup.operationArtist')
+                  }}
                 </span>
                 <span class="snapshot-separator">·</span>
-                <span class="snapshot-tracks">{{ t('backup.trackCount', { count: snapshot.trackCount }) }}</span>
+                <span class="snapshot-tracks">{{
+                  t('backup.trackCount', { count: snapshot.trackCount })
+                }}</span>
                 <span class="snapshot-separator">·</span>
                 <span class="snapshot-date">{{ formatDate(snapshot.createdAt) }}</span>
               </div>
@@ -65,7 +67,9 @@
       <div class="confirm-dialog">
         <p>{{ t('backup.restoreConfirm', { name: confirmSnapshot?.playlistName }) }}</p>
         <div class="confirm-actions">
-          <button class="confirm-cancel" @click="showConfirm = false">{{ t('common.close') }}</button>
+          <button class="confirm-cancel" @click="showConfirm = false">
+            {{ t('common.close') }}
+          </button>
           <button class="confirm-restore" @click="confirmRestore">{{ t('backup.restore') }}</button>
         </div>
       </div>
@@ -75,7 +79,9 @@
       <div class="confirm-dialog">
         <p>{{ t('backup.deleteConfirm', { name: snapshotToDelete?.playlistName }) }}</p>
         <div class="confirm-actions">
-          <button class="confirm-cancel" @click="showDeleteConfirm = false">{{ t('common.close') }}</button>
+          <button class="confirm-cancel" @click="showDeleteConfirm = false">
+            {{ t('common.close') }}
+          </button>
           <button class="confirm-delete" @click="confirmDelete">{{ t('backup.delete') }}</button>
         </div>
       </div>
@@ -92,7 +98,15 @@ import type { PlaylistSnapshot } from '@/types/api'
 
 const { t } = useI18n()
 const apiStore = useApiStore()
-const { snapshots, loadingSnapshots, restoringId, deletingId, fetchSnapshots, restoreSnapshot, deleteSnapshot } = useBackup()
+const {
+  snapshots,
+  loadingSnapshots,
+  restoringId,
+  deletingId,
+  fetchSnapshots,
+  restoreSnapshot,
+  deleteSnapshot,
+} = useBackup()
 
 const isOpen = ref(false)
 const showConfirm = ref(false)

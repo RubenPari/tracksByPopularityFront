@@ -12,12 +12,12 @@ const ARTISTS_STALE_TIME = 5 * 60 * 1000 // 5 minutes
 /**
  * Composable for fetching and caching followed artists from user's library.
  * Uses SWR pattern for optimal UX.
- * 
+ *
  * Benefits:
  * - Shows cached artists immediately for fast UI rendering
  * - Refreshes data in background
  * - Persists cache in localStorage
- * 
+ *
  * @example
  * ```vue
  * <script setup>
@@ -33,24 +33,24 @@ export function useCachedArtists() {
     isRevalidating,
     lastUpdated,
     refresh,
-    clearCache
+    clearCache,
   } = useCachedApi<ArtistSummary[]>(
     async () => {
       logger.info('Fetching artists from API')
       const response = await trackApiService.getLibraryArtists()
-      
+
       if (response.success && response.data) {
         return response.data
       }
-      
+
       throw new Error(response.error || 'Failed to fetch artists')
     },
     ARTISTS_CACHE_KEY,
     {
       staleTime: ARTISTS_STALE_TIME,
       revalidateOnFocus: true,
-      revalidateOnReconnect: true
-    }
+      revalidateOnReconnect: true,
+    },
   )
 
   return {
@@ -67,6 +67,6 @@ export function useCachedArtists() {
     /** Force a refresh */
     refresh,
     /** Clear local cache */
-    clearCache
+    clearCache,
   }
 }

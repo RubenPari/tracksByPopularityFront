@@ -33,7 +33,7 @@ export function useTrackActions() {
     logger.info(`Adding tracks with ${range} popularity`)
     return apiStore.executeApiCall(
       () => trackApiService.addTracksByPopularity(range),
-      successMessage
+      successMessage,
     )
   }
 
@@ -49,7 +49,7 @@ export function useTrackActions() {
     logger.info('Adding tracks by artist', { artistId })
     return apiStore.executeApiCall(
       () => trackApiService.addTracksByArtist(artistId),
-      SUCCESS_MESSAGES.ARTIST_TRACKS_ADDED
+      SUCCESS_MESSAGES.ARTIST_TRACKS_ADDED,
     )
   }
 
@@ -62,4 +62,3 @@ export function useTrackActions() {
     loading: computed(() => apiStore.loading),
   }
 }
-

@@ -33,7 +33,9 @@ apiClient.interceptors.response.use(
         apiStore.error = t('errors.authRequired')
         // Fetch the Spotify login URL from the backend and redirect
         try {
-          const loginResponse = await axios.get(`${API_BASE_URL}/auth/login`, { withCredentials: true })
+          const loginResponse = await axios.get(`${API_BASE_URL}/auth/login`, {
+            withCredentials: true,
+          })
           const loginUrl = loginResponse.data?.data?.loginUrl
           if (loginUrl) {
             window.location.href = loginUrl
