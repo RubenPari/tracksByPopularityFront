@@ -1,0 +1,20 @@
+# fly.toml for frontend deployment on Fly.io
+app = &quot;tracksbyPopularity-frontend&quot;
+primary_region = &quot;iad&quot;
+
+[build]
+  dockerfile = &quot;Dockerfile&quot;
+  args = { VITE_API_BASE_URL = &quot;https://tracksbyPopularity-backend.fly.dev&quot; }  # Replace with backend app URL
+
+[env]
+  NODE_ENV = &quot;production&quot;
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = [&quot;app&quot;]
+
+# Proxy API calls to backend if needed, or update VITE_API_BASE_URL
