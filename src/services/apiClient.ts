@@ -16,6 +16,16 @@ export const apiClient = axios.create({
 })
 
 // Setup interceptors
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token')
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+
+  return config
+})
+
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response
